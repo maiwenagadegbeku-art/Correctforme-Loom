@@ -336,6 +336,19 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
   color: var(--accent);
 }
 .scan-remove { cursor: pointer; color: var(--warn); margin-left: 4px; }
+.scan-pages { display: inline-flex; flex-wrap: wrap; gap: 3px; margin-left: 2px; }
+.scan-page {
+  display: inline-flex; align-items: center; gap: 2px;
+  padding: 1px 4px 1px 6px;
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  background: var(--bg);
+  font-size: 10px; font-weight: 700;
+  color: var(--accent);
+}
+.scan-page .scan-remove { margin-left: 1px; font-size: 9px; }
+.scan-attached.scan-many { border-color: var(--warn); color: var(--warn); }
+.scan-add-more { margin-top: 4px; font-size: 10px; padding: 3px 8px; }
 .student-status-cell { width: 80px; text-align: center; }
 .status-dot {
   display: inline-block;
@@ -1218,7 +1231,6 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
               ⚡ Corriger le lot automatiquement
             </button>
             <button class="btn-secondary" id="btn-reset" onclick="resetAll()" style="display:none;">↺ Nouveau lot</button>
-        <button class="btn-nouvelle-copie" id="btn-reset-manual" onclick="resetAll()" style="display:none;">↺ Nouveau lot</button>
             <span id="launch-hint" style="font-size:12px; color:var(--muted);">Associe au moins une copie pour lancer.</span>
           </div>
 
@@ -1388,6 +1400,10 @@ function generateManualPrompt() {
   const prompt = buildPrompt(student);
   document.getElementById('manual-prompt-text').value = prompt;
   document.getElementById('manual-step2').style.display = '';
+  const nbPages = (student.files && student.files.length) ? student.files.length : 1;
+  if (nbPages > 1) {
+    showToast(`Cette copie compte ${nbPages} pages : joins-les toutes dans Claude.ai`);
+  }
   hideError();
 }
 
@@ -1563,45 +1579,82 @@ function renderStudentTable() {
   populateStudentManualSelect();
 }
 
-function renderScanCell(cell, i) {
+const SCAN_ACCEPT = 'image/jpeg,image/png,image/webp,image/*';
+const SCAN_SEUIL = 6;
+
+// Une copie peut compter plusieurs pages. STUDENTS[i].files est la liste de
+// reference ; STUDENTS[i].file reste la premiere page, pour compatibilite.
+function getScans(i) {
   const s = STUDENTS[i];
-  if (s.file) {
+  if (!s.files) s.files = s.file ? [s.file] : [];
+  return s.files;
+}
+function setScans(i, arr) {
+  STUDENTS[i].files = arr;
+  STUDENTS[i].file  = arr.length ? arr[0] : null;
+}
+
+function renderScanCell(cell, i) {
+  const files = getScans(i);
+  if (files.length) {
+    const puces = files.map(function (f, k) {
+      return '<span class="scan-page" title="' + escHtml(f.name) + '">' + (k + 1) +
+             '<span class="scan-remove" onclick="removeScan(' + i + ',' + k + ')">✕</span></span>';
+    }).join('');
     cell.innerHTML = `
-      <div class="scan-attached">
-        📎 ${escHtml(s.file.name.substring(0,22))}…
-        <span class="scan-remove" onclick="removeScan(${i})">✕</span>
-      </div>`;
+      <div class="scan-attached${files.length > SCAN_SEUIL ? ' scan-many' : ''}">
+        📎 ${files.length} page${files.length > 1 ? 's' : ''}
+        <span class="scan-pages">${puces}</span>
+        <span class="scan-remove" onclick="removeScan(${i})" title="Tout retirer">✕✕</span>
+      </div>
+      <label class="scan-picker-btn scan-add-more">
+        ＋ Ajouter une page
+        <input type="file" multiple accept="${SCAN_ACCEPT}" onchange="attachScan(${i}, this)">
+      </label>`;
   } else {
     cell.innerHTML = `
       <label class="scan-picker-btn">
         📷 Ajouter scan
-        <input type="file" accept="image/jpeg,image/png,image/webp,image/*" onchange="attachScan(${i}, this)">
+        <input type="file" multiple accept="${SCAN_ACCEPT}" onchange="attachScan(${i}, this)">
       </label>`;
   }
 }
 
 function attachScan(i, input) {
-  if (!input.files[0]) return;
-  STUDENTS[i].file = input.files[0];
-  const cell = document.getElementById(`scan-cell-${i}`);
-  renderScanCell(cell, i);
-  updateCopiesBadge();
-  updateLaunchState();
-  populateStudentManualSelect();
+  if (!input.files || !input.files.length) return;
+  const ajoutees = Array.prototype.slice.call(input.files);
+  setScans(i, getScans(i).concat(ajoutees));
+  input.value = '';
+  rafraichirScan(i);
 }
 
-function removeScan(i) {
-  STUDENTS[i].file = null;
+// k non fourni : retire toutes les pages. k fourni : retire cette page seulement.
+function removeScan(i, k) {
+  if (typeof k === 'number') {
+    const arr = getScans(i).slice();
+    arr.splice(k, 1);
+    setScans(i, arr);
+  } else {
+    setScans(i, []);
+  }
+  rafraichirScan(i);
+}
+
+function rafraichirScan(i) {
   const cell = document.getElementById(`scan-cell-${i}`);
-  renderScanCell(cell, i);
+  if (cell) renderScanCell(cell, i);
   updateCopiesBadge();
   updateLaunchState();
   populateStudentManualSelect();
 }
 
 function updateCopiesBadge() {
-  const n = STUDENTS.filter(s => s.file).length;
-  document.getElementById('copies-badge').textContent = `${n} copie${n>1?'s':''}`;
+  let copies = 0, pages = 0;
+  STUDENTS.forEach((s, i) => { const k = getScans(i).length; if (k) copies++; pages += k; });
+  const el = document.getElementById('copies-badge');
+  el.textContent = pages > copies
+    ? `${copies} copie${copies > 1 ? 's' : ''} · ${pages} pages`
+    : `${copies} copie${copies > 1 ? 's' : ''}`;
 }
 
 function updateLaunchState() {
@@ -1741,22 +1794,28 @@ async function runBatch() {
   }
 
   document.getElementById('btn-reset').style.display = '';
-  const brm = document.getElementById('btn-reset-manual');
-  if (brm) brm.style.display = '';
   renderResults();
 }
 
 async function correctOne(student) {
   const contentBlocks = [];
 
-  const f = student.file;
-  const isImage = f.type.startsWith('image/') || /\.(jpe?g|png|gif|webp)$/i.test(f.name);
+  // Toutes les pages de la copie partent ensemble, dans l'ordre.
+  const pages = (student.files && student.files.length)
+    ? student.files
+    : (student.file ? [student.file] : []);
 
-  if (isImage) {
+  for (let p = 0; p < pages.length; p++) {
+    const f = pages[p];
+    const isImage = f.type.startsWith('image/') || /\.(jpe?g|png|gif|webp)$/i.test(f.name);
+    if (!isImage) continue;
     // Forcer image/jpeg si le navigateur ne détecte pas le type (cas fréquent sur mobile)
     const mediaType = (f.type && f.type.startsWith('image/')) ? f.type : 'image/jpeg';
     const b64 = await toBase64(f);
-    // L'image doit etre placée AVANT le texte pour que Claude la voie correctement
+    if (pages.length > 1) {
+      contentBlocks.push({ type: 'text', text: `--- Page ${p + 1} sur ${pages.length} ---` });
+    }
+    // Les images doivent etre placées AVANT le texte pour que Claude les voie correctement
     contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } });
   }
 
@@ -2141,15 +2200,33 @@ async function exportPDF(id) {
   const lm = 15; const pw = 180; const lineH = 5.5;
   let y = 15;
 
+  // Retire les marques de mise en forme que le texte peut contenir
+  // (**gras**, *italique*, `code`) : elles s'afficheraient telles quelles.
+  const nettoyer = (texte) => (texte || '')
+    .replace(/\*\*\*(.+?)\*\*\*/g, '$1')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/(^|[\s(])\*(\S(?:.*?\S)?)\*(?=[\s.,;:!?)]|$)/g, '$1$2')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/\r\n?/g, '\n')
+    .replace(/[ \t]+/g, ' ');
+
+  // Decoupe un texte en lignes. Un paragraphe vide est rendu par la chaine
+  // vide, qui sert de blanc de separation.
   const wrap = (text, maxW) => {
-    const words = (text || '').split(' ');
-    const lines = []; let line = '';
-    words.forEach(w => {
-      const test = line ? line + ' ' + w : w;
-      if (doc.getTextWidth(test) > maxW) { if (line) lines.push(line); line = w; }
-      else line = test;
+    const lines = [];
+    nettoyer(text).split('\n').forEach((para, pi, tous) => {
+      const mots = para.trim().split(' ').filter(Boolean);
+      if (!mots.length) { if (lines.length) lines.push(''); return; }
+      let line = '';
+      mots.forEach(w => {
+        const test = line ? line + ' ' + w : w;
+        if (doc.getTextWidth(test) > maxW) { if (line) lines.push(line); line = w; }
+        else line = test;
+      });
+      if (line) lines.push(line);
+      // blanc entre deux paragraphes qui se suivent
+      if (pi < tous.length - 1 && tous[pi + 1].trim()) lines.push('');
     });
-    if (line) lines.push(line);
     return lines;
   };
 
@@ -2232,10 +2309,12 @@ async function exportPDF(id) {
       doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(180,80,60);
       doc.text(e.type, lm+2, y+4.5);
       doc.setFont('helvetica','italic'); doc.setTextColor(26,24,48);
-      const ex = e.exemple.length>45 ? e.exemple.substring(0,43)+"…" : e.exemple;
+      const exBrut = nettoyer(e.exemple).replace(/\n/g, ' ');
+      const ex = exBrut.length > 45 ? exBrut.substring(0, 43) + "…" : exBrut;
       doc.text(ex, lm+35, y+4.5);
       doc.setFont('helvetica','normal');
-      const cor = e.correction.length>35 ? e.correction.substring(0,33)+"…" : e.correction;
+      const corBrut = nettoyer(e.correction).replace(/\n/g, ' ');
+      const cor = corBrut.length > 35 ? corBrut.substring(0, 33) + "…" : corBrut;
       doc.text(cor, lm+105, y+4.5);
       y += 7;
     });
@@ -2260,7 +2339,8 @@ async function exportPDF(id) {
       doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(0,130,100);
       doc.text(p.type, lm+2, y+4.5);
       doc.setFont('helvetica','normal'); doc.setTextColor(26,24,48);
-      const obs = p.obs.length>100 ? p.obs.substring(0,98)+"…" : p.obs;
+      const obsBrut = nettoyer(p.obs).replace(/\n/g, ' ');
+      const obs = obsBrut.length > 100 ? obsBrut.substring(0, 98) + "…" : obsBrut;
       doc.text(obs, lm+45, y+4.5);
       y += 7;
     });
@@ -2269,16 +2349,31 @@ async function exportPDF(id) {
 
   // ── Appréciation ──
   if (r.appreciBlock) {
-    if (y > 240) { doc.addPage(); y = 15; }
+    const BAS = 282;           // limite basse de la zone imprimable
+    if (y > 250) { doc.addPage(); y = 15; }
     doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(108,92,231);
     doc.text('APPRÉCIATION', lm, y); y += 3;
+
+    doc.setFont('helvetica','normal'); doc.setFontSize(9);
     const bLines = wrap(r.appreciBlock, pw - 8);
-    const bH = bLines.length * lineH + 8;
-    doc.setFillColor(247,246,255); doc.roundedRect(lm, y, pw, bH, 2, 2, 'F');
-    doc.setDrawColor(108,92,231); doc.setLineWidth(0.5);
-    doc.line(lm, y, lm, y + bH);
-    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(26,24,48);
-    bLines.forEach(line => { y += lineH; doc.text(line, lm+4, y); });
+
+    // L'encadré se dessine par tronçons : s'il ne tient pas sur la page,
+    // il reprend sur la suivante au lieu de déborder.
+    let k = 0;
+    while (k < bLines.length) {
+      const place = Math.max(1, Math.floor((BAS - y - 8) / lineH));
+      const bout = bLines.slice(k, k + place);
+      const bH = bout.length * lineH + 8;
+      doc.setFillColor(247,246,255); doc.roundedRect(lm, y, pw, bH, 2, 2, 'F');
+      doc.setDrawColor(108,92,231); doc.setLineWidth(0.5);
+      doc.line(lm, y, lm, y + bH);
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(26,24,48);
+      let yy = y + 4;
+      bout.forEach(line => { yy += lineH; if (line) doc.text(line, lm+4, yy); });
+      y += bH;
+      k += bout.length;
+      if (k < bLines.length) { doc.addPage(); y = 15; }
+    }
     y += 6;
   }
 
@@ -2318,11 +2413,13 @@ function resetManualForm() {
 
 // ── RESET ──
 function resetAll() {
-  STUDENTS.forEach(s => { s.file = null; s.result = null; s.status = 'pending'; });
+  STUDENTS.forEach(s => { s.file = null; s.files = []; s.result = null; s.status = 'pending'; });
   if (GRILLE) renderStudentTable();
   document.getElementById('card-results').style.display = 'none';
   document.getElementById('progress-wrap').classList.remove('visible');
   document.getElementById('btn-reset').style.display = 'none';
+  const brm = document.getElementById('btn-reset-manual');
+  if (brm) brm.style.display = 'none';
   document.getElementById('btn-launch').disabled = false;
   setProgress(0, 1, '');
   updateCopiesBadge();
@@ -2474,18 +2571,22 @@ function renderPdfThumb(idx, grid) {
 
 function applyPdfAssignments() {
   let applied = 0;
-  pdfPages.forEach(p => {
-    if (p.assignedTo !== null && p.blob) {
-      const si = p.assignedTo;
-      if (si >= 0 && si < STUDENTS.length) {
-        // Créer un File depuis le blob
-        const file = new File([p.blob], `scan-page${p.pageNum}.jpg`, { type: 'image/jpeg' });
-        STUDENTS[si].file = file;
-        const cell = document.getElementById(`scan-cell-${si}`);
-        if (cell) renderScanCell(cell, si);
-        applied++;
-      }
-    }
+  // Regrouper d'abord toutes les pages par eleve, dans l'ordre du PDF, puis les
+  // associer en une fois : sinon chaque page ecrase la precedente.
+  const parEleve = {};
+  pdfPages.slice().sort((x, y) => x.pageNum - y.pageNum).forEach(p => {
+    if (p.assignedTo === null || !p.blob) return;
+    const si = p.assignedTo;
+    if (si < 0 || si >= STUDENTS.length) return;
+    if (!parEleve[si]) parEleve[si] = [];
+    parEleve[si].push(new File([p.blob], `scan-page${p.pageNum}.jpg`, { type: 'image/jpeg' }));
+    applied++;
+  });
+  Object.keys(parEleve).forEach(k => {
+    const si = parseInt(k);
+    setScans(si, getScans(si).concat(parEleve[si]));
+    const cell = document.getElementById(`scan-cell-${si}`);
+    if (cell) renderScanCell(cell, si);
   });
   updateCopiesBadge();
   updateLaunchState();
