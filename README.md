@@ -101,7 +101,7 @@ Aucun serveur à installer, aucun compte à créer : le fichier s'ouvre directem
 | Entrée | Formats |
 |---|---|
 | Grille | HTML de distribution Lesson Loom |
-| Copies scannées | JPEG, PNG, WebP |
+| Copies scannées | Images : JPEG, PNG, WebP (tout format d'image lu par le navigateur) |
 | PDF scanner | PDF multi-pages (converti en JPEG par page via pdf.js) |
 
 | Sortie | Formats |
@@ -123,14 +123,35 @@ Aucun serveur à installer, aucun compte à créer : le fichier s'ouvre directem
 
 ## Stack technique
 
-- HTML/CSS/JS standalone — aucune dépendance serveur
+- HTML/CSS/JS standalone — aucun serveur à installer
+- **Une connexion Internet est nécessaire** : la police et les outils PDF sont chargés
+  depuis des services externes à l'ouverture. Sans connexion, l'application s'affiche
+  et la correction en mode sans clé reste possible, mais le PDF Scanner et l'export
+  PDF par élève ne fonctionnent pas
 - Polices : Inter (Google Fonts)
 - Palette : Lesson Loom (violet `#6c5ce7` / vert `#00b894`)
 - pdf.js 3.11.174 — extraction des pages PDF en canvas
 - jsPDF 2.5.1 — génération des PDF par élève
-- html2canvas 1.4.1 — capture des grilles pour l'export
 - API Anthropic (Claude Sonnet) — correction IA (mode batch uniquement)
 - Dark mode intégré
+
+---
+
+## Limites connues
+
+Relevées lors de la relecture d'août 2026, sans conséquence sur les notes, mais bonnes
+à connaître :
+
+- **En mode batch, une panne du service est annoncée comme une copie illisible.** Si la
+  connexion tombe ou si la clé API est refusée, la ligne de l'élève affiche « Copie
+  illisible — à corriger manuellement ». La copie n'est pas en cause : vérifiez d'abord
+  votre connexion et votre clé avant de rescanner quoi que ce soit
+- **Ces mêmes élèves apparaissent avec `undefined` en note**, dans le tableau et dans le
+  CSV de suivi. Relancez-les, ou corrigez-les en mode sans clé
+- **Le bilan de fin de lot annonce « Corrections terminées » même si certaines ont
+  échoué.** Fiez-vous aux pastilles rouges de la colonne d'état
+- La note globale et le niveau CECRL sont proposés par l'IA : **relisez-les toujours**
+  avant de distribuer une fiche à un élève
 
 ---
 
