@@ -161,6 +161,12 @@ AGPLv3 — © Maïwena Gadegbeku
 
 Ce logiciel est distribué sous licence [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html). Vous êtes libre de le copier, le modifier et le redistribuer sous les mêmes termes.
 
+**Crédit obligatoire.** Le fichier [LICENSE](LICENSE) porte une condition
+supplémentaire, au titre de l'article 7(b) de l'AGPLv3 : toute version modifiée
+diffusée publiquement ou mise à disposition sur un serveur doit créditer
+visiblement l'autrice originale, dans son interface ou dans sa documentation. Ce
+crédit ne peut être ni retiré, ni dissimulé aux utilisateurs.
+
 ---
 
 ## Loom Suite
