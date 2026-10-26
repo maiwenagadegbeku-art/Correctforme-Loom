@@ -473,6 +473,42 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 .results-table tr:last-child td { border-bottom: none; }
 .results-table tr:hover td { background: var(--bg); }
 
+.cf13-ed { border-radius: 4px; cursor: text; }
+.cf13-ed:hover { background: var(--primary-light); }
+.cf13-ed:focus { outline: 1.5px solid var(--primary); background: #fff; }
+.cf13-x { border: none; background: none; cursor: pointer; color: var(--muted); font-size: 13px; padding: 0 4px; }
+.cf13-x:hover { color: #e17055; }
+.cf13-add { margin-top: 6px; font-size: 11px; padding: 4px 10px; border: 1px dashed var(--primary); background: none; color: var(--primary); border-radius: 6px; cursor: pointer; font-family: inherit; }
+.grille-preview td.cf13-pick { cursor: pointer; }
+.cf14-pt { width: 48px; padding: 1px 4px; font-size: 12px; font-family: inherit; border: 1px solid var(--primary); border-radius: 4px; text-align: center; color: var(--primary); background: #fff; }
+.grille-preview td.cf13-pick:hover { background: var(--primary-light); }
+.cf18-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+.cf18-title { font-size:14px; font-weight:700; color:var(--ink); }
+.cf18-hint { font-size:11px; color:var(--muted); }
+.cf18-bloc { background:var(--surface2); border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+.cf18-sous { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:12px; font-weight:700; margin-bottom:8px; flex-wrap:wrap; }
+.cf18-ligne { display:grid; grid-template-columns:180px minmax(0,1fr); gap:10px; align-items:center; margin-bottom:6px; }
+.cf18-comp { font-size:12px; color:var(--ink2); }
+.cf18-barre { display:flex; height:22px; border-radius:5px; overflow:hidden; background:#fff; }
+.cf18-barre div { display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; cursor:pointer; box-sizing:border-box; }
+.cf18-leg { display:flex; gap:12px; flex-wrap:wrap; margin-top:4px; font-size:11px; color:var(--muted); }
+.cf18-leg i { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:4px; vertical-align:-1px; }
+.cf18-choix button { font-family:inherit; font-size:11px; padding:4px 10px; border:1px solid var(--border2); background:#fff; color:var(--ink2); cursor:pointer; }
+.cf18-choix button:first-child { border-radius:6px 0 0 6px; } .cf18-choix button:last-child { border-radius:0 6px 6px 0; border-left:none; }
+.cf18-choix button.on { background:var(--primary); color:#fff; border-color:var(--primary); }
+.cf18-table { width:100%; border-collapse:collapse; font-size:12px; }
+.cf18-table th { text-align:left; font-size:11px; color:var(--muted); font-weight:600; padding:4px 6px; border-bottom:1px solid var(--border); }
+.cf18-table td { padding:6px; border-bottom:1px solid var(--border); vertical-align:top; }
+.cf18-table tr:hover td { background:#fff; }
+.cf18-jauge { display:inline-block; height:8px; background:#f0a08a; border-radius:2px; margin-right:5px; }
+.cf18-maj { font-family:inherit; font-size:11px; border:1px dashed var(--primary); background:none; color:var(--primary); border-radius:5px; padding:1px 7px; cursor:pointer; }
+.cf18-deux { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:10px; }
+.cf18-deux .cf18-bloc { margin-bottom:10px; }
+.cf18-item { font-size:12px; padding:4px 0; border-bottom:1px solid var(--border); }
+.cf18-chiffre { font-size:20px; font-weight:700; color:var(--ink); }
+.cf18-histo { display:flex; align-items:flex-end; gap:6px; height:56px; }
+.cf18-histo div { flex:1; background:#b3a9f5; border-radius:3px 3px 0 0; min-height:2px; }
+.cf18-histol { display:flex; gap:6px; } .cf18-histol span { flex:1; text-align:center; font-size:10px; color:var(--muted); }
 .note-chip {
   font-size: 16px;
   font-weight: 700;
@@ -1055,6 +1091,9 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
           </select>
         </div>
       </div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer; width:fit-content;">
+        <input type="checkbox" id="chk-entrainement" onchange="if (STUDENTS.some(s => s.result)) cf13Refresh(0)"> Entraînement (sans note)
+      </label>
       <div>
         <label class="field-label">Consigne / sujet donnés aux élèves (optionnel)</label>
         <textarea id="input-consigne" rows="2" placeholder="Ex : Write a letter to your penpal about your school life. (150 words)"></textarea>
@@ -1070,9 +1109,10 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
             </select>
           </div>
         </div>
-        <textarea id="input-style" rows="5" placeholder="Laisse vide pour utiliser les exemples par défaut, ou colle ici tes propres bilans pour que l'IA imite ton style.&#10;&#10;Ex (français) :&#10;Bon travail dans l'ensemble. La structure est claire mais la grammaire mérite plus d'attention, notamment les temps. Le vocabulaire est adapté mais manque de variété. Continue ainsi !&#10;&#10;Ex (anglais) :&#10;Good effort overall. The structure is clear but grammar needs more attention, especially with tenses. Vocabulary is appropriate but lacks variety. Keep working on sentence complexity."></textarea>
-        <div style="font-size:11px; color:var(--muted); line-height:1.5;">
-          💡 Si tu laisses vide, l'IA utilisera des bilans dans le style de tes appréciations Lesson Loom : direct, sympa, précis, 2–3 phrases.
+        <textarea id="input-style" rows="5" oninput="cf17Save()" placeholder="Laisse vide pour utiliser les exemples par défaut, ou colle ici tes propres bilans pour que l'IA imite ton style.&#10;&#10;Ex (français) :&#10;Bon travail dans l'ensemble. La structure est claire mais la grammaire mérite plus d'attention, notamment les temps. Le vocabulaire est adapté mais manque de variété. Continue ainsi !&#10;&#10;Ex (anglais) :&#10;Good effort overall. The structure is clear but grammar needs more attention, especially with tenses. Vocabulary is appropriate but lacks variety. Keep working on sentence complexity."></textarea>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <div id="cf17-etat" style="font-size:11px; color:var(--muted); line-height:1.5;">💡 Si tu laisses vide, l'IA utilisera des bilans dans le style de tes appréciations Lesson Loom : direct, sympa, précis, 2–3 phrases.</div>
+          <button id="cf17-eff" class="btn-secondary" style="display:none; font-size:11px; padding:4px 10px; flex-shrink:0;" onclick="cf17Clear()">Effacer mon style</button>
         </div>
       </div>
     </div>
@@ -1146,7 +1186,7 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
         <button class="mode-tab" id="tab-batch" onclick="switchMode('batch')">
           <span class="tab-icon">⚡</span>
           <span class="tab-title">Batch automatique</span>
-          <span class="tab-sub">Clé API · ~5 €/an · Toutes les copies d'un coup</span>
+          <span class="tab-sub">Clé API · quelques centimes par copie · Toutes les copies d'un coup</span>
         </button>
       </div>
 
@@ -1165,12 +1205,6 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
                 <button class="btn-secondary" onclick="generateManualPrompt()" id="btn-gen-prompt">Générer le prompt →</button>
                 <button class="btn-nouvelle-copie" onclick="resetManualForm()" title="Effacer et recommencer pour une autre copie">↺ Nouvelle copie</button>
               </div>
-              <div class="tip-box" style="margin-top:10px;">
-                💡 <strong>Astuce pour aller plus vite :</strong> Dans Claude.ai, crée un
-                <a href="https://claude.ai/projects" target="_blank">Project</a> et colle-y ta grille CECRL une seule fois.
-                Ensuite envoie chaque copie dans ce project — Claude se souviendra de la grille entre chaque correction.
-                Tu n'auras plus qu'à joindre l'image et envoyer le prompt.
-              </div>
             </div>
           </div>
 
@@ -1178,15 +1212,16 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
             <div class="step-row">
               <span class="step-badge">2</span>
               <div class="step-content">
-                <div class="step-label">Copier le prompt et l'ouvrir dans Claude.ai</div>
-                <div class="step-sub">Copie le prompt ci-dessous, ouvre Claude.ai dans un nouvel onglet, et colle-le. Claude verra l'image de la copie jointe automatiquement.</div>
+                <div class="step-label">Copier le prompt et l'ouvrir dans l'IA de ton choix</div>
+                <div class="step-sub">Copie le prompt ci-dessous, ouvre ton IA dans un nouvel onglet et colle-le. Je te propose Claude, avec lequel ce prompt a été testé.</div>
                 <div style="display:flex; gap:8px; margin-top:8px;">
                   <button class="btn-secondary" onclick="copyManualPrompt()" id="btn-copy-prompt">📋 Copier le prompt</button>
                   <a href="https://claude.ai" target="_blank" class="btn-modal-primary" style="font-size:12px; padding:7px 14px;">Ouvrir Claude.ai ↗</a>
+                  <button class="btn-secondary" onclick="cf22Pages()" id="cf22-btn" title="Un seul PDF avec les pages de la copie, à joindre dans ton IA">⬇ Pages de la copie</button>
                 </div>
                 <textarea class="prompt-textarea" id="manual-prompt-text" readonly style="margin-top:8px;"></textarea>
                 <div class="partial-warning" style="margin-top:6px; font-size:11px;">
-                  ⚠️ L'image de la copie ne peut pas être jointe automatiquement depuis un fichier local. Dans Claude.ai, clique sur le trombone 📎 et attache manuellement le fichier image de la copie avant d'envoyer le prompt.
+                  ⚠️ Dans ton IA, clique sur le trombone 📎 et joins <strong>toutes les pages</strong> de la copie, ou le fichier « Pages de la copie », avant d'envoyer le prompt.
                 </div>
               </div>
             </div>
@@ -1278,8 +1313,8 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
 
       <div class="modal-cost">
         💶 <strong>Coût estimé pour ton usage :</strong><br>
-        170 élèves × 10 devoirs × ~0,003 € = <strong>environ 5 € par an</strong><br>
-        <span style="color:var(--muted); font-size:11px;">Le crédit ne expire pas. Tu peux commencer avec 5 € et voir.</span>
+        Une copie coûte environ <strong>3 à 5 centimes</strong>, soit <strong>1 à 2 € pour une classe de 35</strong>.<br>
+        <span style="color:var(--muted); font-size:11px;">Commence avec 5 € de crédit : cela suffit pour une centaine de copies.</span>
       </div>
 
       <div class="modal-btn-row">
@@ -1304,7 +1339,10 @@ textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
     <div class="card-body no-print" style="padding-bottom:10px; display:flex; gap:10px; flex-wrap:wrap; border-bottom:1.5px solid var(--border);">
       <button class="btn-secondary" onclick="exportCSV()">📊 Export CSV</button>
       <button class="btn-secondary" onclick="printAll()">🖨️ Imprimer tout</button>
+      <button class="btn-secondary" onclick="exportGrilleLLClasse()" title="Un seul fichier Lesson Loom pour toute la liste, élèves corrigés pré-remplis">📋 Grille LL de la classe</button>
+      <button class="btn-secondary" onclick="cf18Toggle()">📊 Bilan de classe</button>
     </div>
+    <div id="cf18-bilan" class="card-body no-print" style="display:none; border-bottom:1.5px solid var(--border);"></div>
 
     <!-- TABLE RÉSULTATS -->
     <div style="overflow-x:auto;">
@@ -1359,6 +1397,78 @@ function toggleApiKeyVisibility() {
   } catch(e) {}
 })();
 
+// CF22 : un seul PDF avec les pages de la copie, a joindre dans l IA en mode sans cle
+function cf22Label(s) {
+  const b = document.getElementById('cf22-btn');
+  if (!b || !s) return;
+  const n = (s.files && s.files.length) ? s.files.length : (s.file ? 1 : 0);
+  b.textContent = `⬇ Pages de la copie (${n})`;
+}
+function cf22Image(file) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas');
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      res({ data: c.toDataURL('image/jpeg', 0.9), w: c.width, h: c.height });
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('image')); };
+    img.src = url;
+  });
+}
+async function cf22Pages() {
+  const id = parseInt(document.getElementById('sel-student-manual').value);
+  const idx = STUDENTS.findIndex(x => x.id === id);
+  if (idx < 0) { showError('Choisis un élève.'); return; }
+  const s = STUDENTS[idx];
+  const files = getScans(idx);
+  if (!files.length) { showError('Cet élève n’a pas de copie associée.'); return; }
+  if (!window.jspdf) { showError('Le module PDF n’est pas chargé : vérifie la connexion, puis recharge la page.'); return; }
+  try {
+    const doc = new window.jspdf.jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+    for (let k = 0; k < files.length; k++) {
+      const im = await cf22Image(files[k]);
+      const paysage = im.w > im.h;
+      if (k > 0) doc.addPage('a4', paysage ? 'l' : 'p');
+      else if (paysage) { doc.deletePage(1); doc.addPage('a4', 'l'); }
+      const pw = paysage ? 297 : 210, ph = paysage ? 210 : 297, m = 5;
+      const r = Math.min((pw - 2 * m) / im.w, (ph - 2 * m) / im.h);
+      const w = im.w * r, h = im.h * r;
+      doc.addImage(im.data, 'JPEG', (pw - w) / 2, (ph - h) / 2, w, h);
+    }
+    doc.save(`copie-${String(s.name || 'eleve').replace(/\s+/g, '-')}.pdf`);
+    showToast(`Pages de la copie téléchargées (${files.length}) : joins ce fichier dans ton IA ✓`);
+  } catch (e) {
+    showError('Impossible de préparer les pages de cette copie. Joins les images une par une.');
+  }
+}
+
+// CF17 : le style de bilan est memorise dans ce navigateur, comme la cle
+const CF17_DEF = `💡 Si tu laisses vide, l'IA utilisera des bilans dans le style de tes appréciations Lesson Loom : direct, sympa, précis, 2–3 phrases.`;
+function cf17Etat() {
+  const t = document.getElementById('input-style'), e = document.getElementById('cf17-etat'), b = document.getElementById('cf17-eff');
+  if (!t || !e || !b) return;
+  if (t.value.trim()) { e.textContent = '✓ Mémorisé dans ce navigateur · utilisé pour chaque appréciation'; e.style.color = '#00b894'; b.style.display = ''; }
+  else { e.textContent = CF17_DEF; e.style.color = ''; b.style.display = 'none'; }
+}
+function cf17Save() {
+  try {
+    const v = document.getElementById('input-style').value;
+    if (v.trim()) localStorage.setItem('cf_style_bilan', v); else localStorage.removeItem('cf_style_bilan');
+  } catch (e) {}
+  cf17Etat();
+}
+function cf17Clear() { document.getElementById('input-style').value = ''; cf17Save(); }
+(function () {
+  try { const s = localStorage.getItem('cf_style_bilan'); if (s) document.getElementById('input-style').value = s; } catch (e) {}
+  cf17Etat();
+})();
+
 // ── GESTION DES 2 MODES ──
 let currentMode = 'manual';
 
@@ -1400,6 +1510,7 @@ function generateManualPrompt() {
   const prompt = buildPrompt(student);
   document.getElementById('manual-prompt-text').value = prompt;
   document.getElementById('manual-step2').style.display = '';
+  cf22Label(student); // CF22
   const nbPages = (student.files && student.files.length) ? student.files.length : 1;
   if (nbPages > 1) {
     showToast(`Cette copie compte ${nbPages} pages : joins-les toutes dans Claude.ai`);
@@ -1620,11 +1731,22 @@ function renderScanCell(cell, i) {
   }
 }
 
+// Même règle que celle appliquée à l'envoi d'une copie
+function isScanImage(f) {
+  return ((f && f.type) || '').startsWith('image/') || /\.(jpe?g|png|gif|webp)$/i.test((f && f.name) || '');
+}
+
 function attachScan(i, input) {
   if (!input.files || !input.files.length) return;
-  const ajoutees = Array.prototype.slice.call(input.files);
-  setScans(i, getScans(i).concat(ajoutees));
+  const toutes = Array.prototype.slice.call(input.files);
+  const ajoutees = toutes.filter(isScanImage);
+  const refusees = toutes.length - ajoutees.length;
   input.value = '';
+  if (refusees) {
+    showToast(`${refusees} fichier${refusees>1?'s':''} refusé${refusees>1?'s':''} : ce champ n'accepte que des images. Pour un PDF, passez par le PDF Scanner.`, 6000);
+  }
+  if (!ajoutees.length) return;
+  setScans(i, getScans(i).concat(ajoutees));
   rafraichirScan(i);
 }
 
@@ -1708,26 +1830,30 @@ function buildPrompt(student) {
   const defaultStyle = bilanLang === 'fr' ? defaultStyleFr : defaultStyleEn;
   const tuInstr = "IMPORTANT : adresse-toi DIRECTEMENT à l\'élève en utilisant \'tu\' (ex: \'Tu maîtrises\', \'Ton travail\', \'Tu dois\') — JAMAIS \'cet élève\', \'l\'élève\', \'il\', \'elle\', \'son\', \'sa\'.";
   const styleInstr = styleEx
-    ? `Rédige l'appréciation EN ${langLabel}. ${tuInstr} Imite EXACTEMENT le registre et la longueur de ces exemples :\n${styleEx}`
-    : `Rédige l'appréciation EN ${langLabel}. ${tuInstr} Sois exigeant(e) et précis(e), imite ce registre :\n${defaultStyle}`;
+    ? `Rédige l'appréciation EN ${langLabel}. ${tuInstr} Inspire-toi du registre et de la longueur de ces exemples, sans reprendre leurs phrases : tout le contenu doit venir de la copie.\n${styleEx}`
+    : `Rédige l'appréciation EN ${langLabel}. ${tuInstr} Sois exigeant(e) et précis(e). Inspire-toi de ce registre, sans reprendre ses phrases : tout le contenu doit venir de la copie.\n${defaultStyle}`;
 
-  const grilleColsStr = (GRILLE?.cols || []).map(c => `${c}: [palier CECRL exact]`).join('\n');
+  // CF2 : le palier est choisi parmi les intitules exacts des lignes de la grille (CECRL ou personnalises)
+  const cf2Rows = (GRILLE?.rows || []).join(' | ');
+  const grilleColsStr = (GRILLE?.cols || []).map(c => `${c}: [un seul intitulé, recopié exactement parmi : ${cf2Rows}]`).join('\n');
 
   return `Tu es un correcteur d'anglais LV1 exigeant dans le secondaire français. Réponds UNIQUEMENT avec les sections indiquées, sans aucun texte avant ni après.
 
+Les pages jointes (images ou PDF) sont la copie rendue par l'élève, à corriger telle quelle, même si elle est tapée ou ressemble à un document (script, dialogue, lettre, article…). Ne demande jamais une autre copie.
+
 CONTEXTE : Élève : ${student.name} | Classe : ${niveau} | Tâche : ${tache} | Attendu : ${cecr}${consigne ? ` | Consigne : "${consigne}"` : ''}
 ${grilleDesc}
-EXIGENCE DE NOTATION : Sois rigoureux. Un élève qui fait des erreurs récurrentes de grammaire de base ne peut pas dépasser B1. Un texte court et peu développé ne dépasse pas A2+. La note doit découler strictement du barème de la grille, pas d'une impression générale. Ne surestime pas.
+EXIGENCE DE NOTATION : Le niveau attendu sert uniquement à situer l'élève dans l'appréciation. Choisis chaque palier seulement d'après les descripteurs de la grille et la copie, sans tenir compte du niveau attendu. Sois rigoureux. Un élève qui fait des erreurs récurrentes de grammaire de base ne peut pas dépasser B1. Un texte court et peu développé ne dépasse pas A2+. ${GRILLE ? 'Chaque palier doit découler strictement des descripteurs de la grille' : 'La note doit découler strictement du barème de la grille'}, pas d'une impression générale. Ne surestime pas.
 
 ===LISIBILITE===
 [100, 75, 50 ou 0] | [commentaire si < 100]
 
 ===NOTE===
-[note]/20 | Niveau observé : [CECRL exact]
+${GRILLE ? 'Niveau observé : [CECRL exact]' : '[note]/20 | Niveau observé : [CECRL exact]'}
 
 ${grilleColsStr ? `===GRILLE===\n${grilleColsStr}\n` : ''}===ERREURS===
-[Liste les 3-5 erreurs les plus récurrentes sous ce format exact, une par ligne :
-TYPE | exemple exact de la copie | correction suggérée
+[Liste jusqu'à 8 erreurs récurrentes, de la plus fréquente à la moins fréquente, sous ce format exact, une par ligne :
+TYPE | exemple exact de la copie | correction suggérée | nombre d'occurrences dans la copie (un chiffre)
 Catégories possibles : Grammaire | Vocabulaire | Orthographe | Cohérence | Pragmatique]
 
 ===POSITIFS===
@@ -1735,7 +1861,71 @@ Catégories possibles : Grammaire | Vocabulaire | Orthographe | Cohérence | Pra
 TYPE | exemple ou observation de la copie]
 
 ===APPRECIATION===
-[${styleInstr}]`;
+[${styleInstr}${GRILLE ? ' Ne cite aucune note chiffrée.' : ''}]`;
+}
+
+// CF4 : un 0 reste 0 ; seul un point absent s affiche « ? »
+function cf4Pts(v) { return (v === 0 || v === '0' || (v !== undefined && v !== null && v !== '')) ? v : '?'; }
+
+// CF3 : l IA choisit les paliers, l appli calcule les points et la note avec la regle de Lesson Loom
+function cf3Num(v) {
+  if (v === null || v === undefined || v === '') return null;
+  const m = String(v).match(/\d+(?:[.,]\d+)?/g);
+  if (!m) return null;
+  const n = m.map(x => parseFloat(x.replace(',', '.'))).filter(x => !isNaN(x));
+  return n.length ? Math.max.apply(null, n) : null;
+}
+function cf3LooksLevel(s) {
+  return /^\s*(?:[A-C][12]\+?(?:\s*[\/-]\s*[A-C][12]\+?)?|(?:niveau|level|palier)\s*\d+)\s*$/i.test(String(s || ''));
+}
+// Grille Criteres rangee a l envers (niveaux en colonnes) : pas de calcul
+function cf3Inverse() {
+  const cols = (GRILLE && GRILLE.cols) || [], rows = (GRILLE && GRILLE.rows) || [];
+  const cl = cols.filter(cf3LooksLevel).length, rl = rows.filter(cf3LooksLevel).length;
+  return cols.length > 0 && cl > cols.length / 2 && rl <= rows.length / 2;
+}
+function cf3CellPoints(ri, ci) {
+  if (!GRILLE || cf3Inverse()) return null;
+  const cell = (GRILLE.cells || {})[ri + '_' + ci];
+  const own = cell ? cf3Num(cell.points) : null;
+  if (own !== null) return Math.round(own * 100) / 100;
+  const rp = (GRILLE.rowsPoints || []).map(cf3Num);
+  if (rp[ri] === null || rp[ri] === undefined) return null;
+  const cps = (GRILLE.colsPoints || []).map(cf3Num);
+  if (!cps.some(v => v !== null)) return Math.round(rp[ri] * 100) / 100;
+  const cp = cps[ci];
+  if (cp === null || cp === undefined) return null;
+  const vals = rp.filter(v => v !== null && v !== undefined);
+  const max = Math.max.apply(null, vals);
+  if (!(max > 0) || vals.every(v => v === vals[0])) return null;
+  return Math.round(cp * rp[ri] / max * 100) / 100;
+}
+// CF14 : points d une case choisie, ajustes par l enseignant s il les a modifies
+function cf14Pts(over, col, ri, ci) {
+  if (over && over[col] !== undefined && over[col] !== null && over[col] !== '') return over[col];
+  return cf3CellPoints(ri, ci);
+}
+// CF14 : maximum d une competence (pour borner la saisie et l afficher dans le PDF)
+function cf14Max(ci) {
+  if (!GRILLE) return null;
+  const cp = cf3Num((GRILLE.colsPoints || [])[ci]);
+  if (cp !== null && !cf3Inverse()) return cp;
+  const v = (GRILLE.rows || []).map((r, ri) => cf3CellPoints(ri, ci)).filter(x => x !== null);
+  return v.length ? Math.max.apply(null, v) : null;
+}
+function cf3Note(sugs, over) {
+  if (!GRILLE || !GRILLE.cols || !GRILLE.cols.length) return null;
+  let sum = 0;
+  for (let ci = 0; ci < GRILLE.cols.length; ci++) {
+    const ri = (GRILLE.rows || []).indexOf((sugs || {})[GRILLE.cols[ci]]);
+    if (ri < 0) return null;
+    const p = cf14Pts(over, GRILLE.cols[ci], ri, ci);
+    if (p === null) return null;
+    sum += p;
+  }
+  const total = cf3Num(GRILLE.totalPoints);
+  if (!(total > 0)) return null;
+  return String(Math.round((sum / total) * 20 * 100) / 100);
 }
 
 function buildGrilleDesc() {
@@ -1746,11 +1936,12 @@ function buildGrilleDesc() {
   const rowsPoints = GRILLE.rowsPoints || [];
   let desc = `\nGRILLE "${GRILLE.name}" — barème strict à appliquer :\n`;
   cols.forEach((c, ci) => {
-    desc += `Compétence "${c}" (/${colsPoints[ci] || '?'} pts) :\n`;
+    desc += `Compétence "${c}" (/${cf4Pts(colsPoints[ci])} pts) :\n`;
     rows.forEach((row, ri) => {
       const cellKey = `${ri}_${ci}`;
       const cellText = GRILLE.cells?.[cellKey]?.text || '';
-      desc += `  ${row} = ${rowsPoints[ri] || '?'} pts${cellText ? ' — ' + cellText.substring(0,80) : ''}\n`;
+      const cf3P = cf3CellPoints(ri, ci); // CF3 : points reels de la case
+      desc += `  ${row} = ${cf3P !== null ? cf3P : cf4Pts(rowsPoints[ri])} pts${cellText ? ' — ' + cellText : ''}\n`; // CF4 : descripteur complet
     });
   });
   return desc;
@@ -1790,12 +1981,18 @@ async function runBatch() {
     }
 
     done++;
-    setProgress(done, total, done === total ? '✓ Corrections terminées' : `Correction de ${toCorrect[done]?.name || ''}… (${done+1}/${total})`);
+    const nFail = toCorrect.filter(s => isTechFail(s.result)).length;
+    setProgress(done, total, done === total
+      ? (nFail ? `⚠️ Terminé — ${nFail} copie${nFail>1?'s':''} à reprendre sur ${total}` : '✓ Corrections terminées')
+      : `Correction de ${toCorrect[done]?.name || ''}… (${done+1}/${total})`);
   }
 
   document.getElementById('btn-reset').style.display = '';
   renderResults();
 }
+
+// Délai maximal d'attente d'une réponse (3 minutes : très au-delà d'une correction normale)
+var CF_TIMEOUT_MS = 180000;
 
 async function correctOne(student) {
   const contentBlocks = [];
@@ -1819,9 +2016,18 @@ async function correctOne(student) {
     contentBlocks.push({ type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } });
   }
 
+  if (!contentBlocks.some(b => b.type === 'image')) {
+    throw new Error('Aucune page lisible : seules les images sont acceptées');
+  }
+
   contentBlocks.push({ type: 'text', text: buildPrompt(student) });
 
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), CF_TIMEOUT_MS);
+  let data;
+  try {
   const response = await fetch('https://api.anthropic.com/v1/messages', {
+    signal: ctrl.signal,
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1830,8 +2036,8 @@ async function correctOne(student) {
       'anthropic-dangerous-direct-browser-access': 'true'
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4000,
+      model: 'claude-sonnet-5-5', // CF19 : Sonnet 5.5 ; ce modele refuse le reglage de hasard
+      max_tokens: 8000,
       messages: [{ role: 'user', content: contentBlocks }]
     })
   });
@@ -1841,12 +2047,40 @@ async function correctOne(student) {
     throw new Error(`HTTP ${response.status} — ${errBody.substring(0, 300)}`);
   }
 
-  const data = await response.json();
+  data = await response.json();
+  } catch (e) {
+    if (e && e.name === 'AbortError') throw new Error(`TIMEOUT — aucune réponse au bout de ${Math.round(CF_TIMEOUT_MS / 60000)} minutes`);
+    throw e;
+  } finally {
+    clearTimeout(timer);
+  }
   const text = data.content.map(b => b.text || '').join('');
   return parseResponse(text);
 }
 
 // ── PARSE RESPONSE ──
+// CF2 : retrouve l intitule exact d une ligne de la grille dans la reponse de l IA.
+// Le plus long intitule d abord (B1+ avant B1) ; aucun ou plusieurs intitules trouves = non reconnu.
+function cf2Norm(s) {
+  return String(s || '').toLowerCase().replace(/[\u00ab\u00bb"\[\]*_`]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function cf2MatchPalier(raw) {
+  const rows = (GRILLE && GRILLE.rows) || [];
+  let work = ' ' + cf2Norm(raw) + ' ';
+  const found = [];
+  rows.map((r, i) => ({ r: r, n: cf2Norm(r) })).filter(o => o.n)
+    .sort((a, b) => b.n.length - a.n.length)
+    .forEach(o => {
+      const re = new RegExp('(^|[^a-z0-9+\u00e0-\u00ff])' + escapeRegex(o.n) + '(?=$|[^a-z0-9+\u00e0-\u00ff])');
+      const m = work.match(re);
+      if (!m) return;
+      if (found.indexOf(o.r) < 0) found.push(o.r);
+      const start = m.index + m[1].length;
+      work = work.slice(0, start) + ' '.repeat(o.n.length) + work.slice(start + o.n.length);
+    });
+  return found.length === 1 ? found[0] : null;
+}
+
 function parseResponse(text) {
   const get = (key) => {
     const re = new RegExp(`===${key}===\\s*([\\s\\S]*?)(?:===|$)`);
@@ -1870,24 +2104,31 @@ function parseResponse(text) {
 
   // Note
   const noteMatch = noteBlock.match(/(\d+(?:[.,]\d+)?)\s*\/\s*20/);
-  const note = noteMatch ? noteMatch[1].replace(',', '.') : '—';
+  let note = noteMatch ? noteMatch[1].replace(',', '.') : '—';
   const cecrMatch = noteBlock.match(/Niveau observé\s*:\s*(\S+)/i);
   const cecrObs = cecrMatch ? cecrMatch[1] : '—';
 
   // Grille suggestions
   const grilleSuggestions = {};
+  const grilleHorsGrille = {}; // CF2 : reponse ne correspondant a aucune ligne de la grille
   if (GRILLE?.cols) {
     GRILLE.cols.forEach(col => {
-      const re = new RegExp(escapeRegex(col) + '\\s*:\\s*([A-C][12][+]?)', 'i');
+      const re = new RegExp(escapeRegex(col) + '\\s*:\\s*([^\\n]+)', 'i');
       const m = grilleBlock.match(re);
-      if (m) grilleSuggestions[col] = m[1];
+      if (!m) return;
+      const label = cf2MatchPalier(m[1]);
+      if (label !== null) grilleSuggestions[col] = label;
+      else grilleHorsGrille[col] = m[1].replace(/[\[\]*_`]/g, '').trim().substring(0, 40);
     });
   }
+
+  // CF3 : avec une grille, la note vient toujours du calcul, jamais de l IA
+  if (GRILLE) { const cf3 = cf3Note(grilleSuggestions); note = cf3 !== null ? cf3 : 'à calculer'; }
 
   // Parser erreurs : "TYPE | exemple | correction"
   const erreurs = (erreursBlock || '').split('\n')
     .map(l => l.trim()).filter(l => l && l.includes('|'))
-    .map(l => { const p = l.split('|').map(x => x.trim()); return { type: p[0]||'—', exemple: p[1]||'—', correction: p[2]||'—' }; });
+    .map(l => { const p = l.split('|').map(x => x.trim()); const n = parseInt(String(p[3] || '').replace(/[^0-9]/g, ''), 10); return { type: p[0]||'—', exemple: p[1]||'—', correction: p[2]||'—', count: n > 0 ? n : null }; }); // CF6 : occurrences
 
   // Parser positifs : "TYPE | observation"
   const positifs = (positifsBlock || '').split('\n')
@@ -1897,13 +2138,36 @@ function parseResponse(text) {
   // Axes pour le CSV = 1ère erreur récurrente
   const axes = erreurs.length ? erreurs.map(e => e.type).join(', ') : '—';
 
+  // CF8 : sans appreciation, la reponse est hors format (refus, reponse coupee, message a l enseignant) :
+  // la copie est a reprendre, rien ne doit partir chez l eleve. Une copie illisible garde son affichage.
+  if (!appreciBlock && lisibility > 0) {
+    return { error: 'HORS_FORMAT: ' + String(text || '').replace(/\s+/g, ' ').trim().substring(0, 200), lisibility: 0, raw: text };
+  }
   const finalAppreciation = appreciBlock || (!hasAnySections ? text : '');
 
-  return { lisibility, lisComment, note, cecrObs, grilleSuggestions,
+  return { lisibility, lisComment, note, cecrObs, grilleSuggestions, grilleHorsGrille,
            erreurs, positifs, appreciBlock: finalAppreciation, axes, raw: text };
 }
 
 // ── RENDER RESULTS ──
+// Une copie dont l'envoi ou l'analyse a échoué (réseau, clé) : la copie n'est pas en cause
+function isTechFail(r) { return !!(r && r.error); }
+
+// Traduit la cause technique en français clair ; le détail brut reste affiché dessous
+function causeFr(msg) {
+  const m = String(msg || '');
+  if (/^HORS_FORMAT/.test(m)) return 'La réponse de l\'IA n\'a pas le format attendu (pas d\'appréciation) : relancez la copie. Rien n\'est exporté tant qu\'elle n\'est pas reprise.';
+  if (/^TIMEOUT/.test(m)) return 'Délai dépassé : aucune réponse au bout de trois minutes. Vérifiez votre connexion, puis reprenez la copie.';
+  if (/Aucune page lisible/.test(m)) return 'Aucune page lisible : seules les images sont acceptées. Pour un PDF, passez par le PDF Scanner.';
+  if (/Lecture image impossible/.test(m)) return 'Une page de la copie n\'a pas pu être lue par le navigateur — par exemple une photo d\'iPhone au format HEIC. Enregistrez-la en JPEG.';
+  if (/Failed to fetch|NetworkError|Load failed|network/i.test(m)) return 'Pas de connexion internet, ou le service n\'a pas pu être joint.';
+  if (/HTTP 401|HTTP 403|x-api-key|authentication/i.test(m)) return 'Clé refusée : vérifiez la clé saisie en haut à droite.';
+  if (/credit/i.test(m)) return 'Crédit insuffisant sur votre compte : rechargez-le dans la console.';
+  if (/HTTP 429/.test(m)) return 'Trop de demandes en peu de temps : patientez une minute, puis reprenez la copie.';
+  if (/HTTP 5\d\d|overloaded/i.test(m)) return 'Service momentanément surchargé : réessayez un peu plus tard.';
+  return 'Erreur inattendue.';
+}
+
 function renderResults() {
   const card = document.getElementById('card-results');
   const tbody = document.getElementById('results-tbody');
@@ -1911,20 +2175,25 @@ function renderResults() {
   tbody.innerHTML = '';
 
   const corrected = STUDENTS.filter(s => s.result);
-  const notes = corrected.map(s => parseFloat(s.result.note)).filter(n => !isNaN(n));
-  const avg = notes.length ? (notes.reduce((a,b)=>a+b,0)/notes.length).toFixed(1) : '—';
-  const max = notes.length ? Math.max(...notes).toFixed(1) : '—';
-  const min = notes.length ? Math.min(...notes).toFixed(1) : '—';
-  const failed = corrected.filter(s => s.result.lisibility < 50).length;
+  const techFailed = corrected.filter(s => isTechFail(s.result)).length;
+  const analysed = corrected.filter(s => !isTechFail(s.result));
+  const notes = analysed.map(s => parseFloat(s.result.note)).filter(n => !isNaN(n));
+  const cf15 = cf15On();
+  const avg = (!cf15 && notes.length) ? (notes.reduce((a,b)=>a+b,0)/notes.length).toFixed(1) : '—';
+  const max = (!cf15 && notes.length) ? Math.max(...notes).toFixed(1) : '—';
+  const min = (!cf15 && notes.length) ? Math.min(...notes).toFixed(1) : '—';
+  const cf15N = cf15 ? analysed.length : notes.length;
+  const failed = analysed.filter(s => s.result.lisibility < 50).length;
 
   document.getElementById('summary-stats').innerHTML = `
-    <div class="stat-block"><div class="stat-value">${corrected.length}</div><div class="stat-label">Copies traitées</div></div>
+    <div class="stat-block"><div class="stat-value">${cf15N}</div><div class="stat-label">Copie${cf15N>1?'s':''} ${cf15 ? 'corrigée' : 'notée'}${cf15N>1?'s':''}</div></div>
     <div class="stat-block"><div class="stat-value">${avg}</div><div class="stat-label">Moyenne /20</div></div>
     <div class="stat-block"><div class="stat-value">${max}</div><div class="stat-label">Meilleure note</div></div>
     <div class="stat-block"><div class="stat-value">${min}</div><div class="stat-label">Note la plus basse</div></div>
     ${failed ? `<div class="stat-block"><div class="stat-value" style="color:var(--warn)">${failed}</div><div class="stat-label">Illisible(s)</div></div>` : ''}
+    ${techFailed ? `<div class="stat-block"><div class="stat-value" style="color:var(--warn)">${techFailed}</div><div class="stat-label">Échec(s) technique(s)</div></div>` : ''}
   `;
-  document.getElementById('results-badge').textContent = `${corrected.length} élève${corrected.length>1?'s':''} · moy. ${avg}/20`;
+  document.getElementById('results-badge').textContent = `${cf15N} copie${cf15N>1?'s':''} ${cf15 ? 'corrigée' : 'notée'}${cf15N>1?'s':''} · ${cf15 ? 'entraînement' : `moy. ${avg}/20`}${techFailed ? ` · ${techFailed} en échec` : ''}`;
 
   STUDENTS.filter(s => s.result).forEach((s, idx) => {
     const r = s.result;
@@ -1932,12 +2201,12 @@ function renderResults() {
     tr.innerHTML = `
       <td style="color:var(--muted); font-size:11px;">${s.id+1}</td>
       <td style="font-weight:600;">${escHtml(s.name)}</td>
-      <td><span class="note-chip">${r.note}</span><span style="color:var(--muted);font-size:11px;">/20</span></td>
-      <td><span class="cecrl-pill">${r.cecrObs}</span></td>
+      <td>${cf15 && !isTechFail(r) ? `<span class="note-chip" style="font-size:12px;">entraînement</span>` : `<span class="note-chip">${isTechFail(r) ? '—' : (r.note ?? '—')}</span><span style="color:var(--muted);font-size:11px;">/20</span>`}</td>
+      <td><span class="cecrl-pill">${isTechFail(r) ? '—' : (r.cecrObs ?? '—')}</span></td>
       <td><div class="axes-text">${escHtml(r.axes || '—')}</div></td>
       <td class="no-print"><button class="btn-view-detail" onclick="toggleDetail(${s.id})">Voir ↓</button></td>
-      <td class="no-print"><button class="btn-grille-ll" onclick="exportGrilleLL(${s.id})" title="Télécharger la grille Lesson Loom pré-remplie">📋 LL</button></td>
-      <td class="no-print"><button class="btn-pdf-single" onclick="exportPDF(${s.id})">PDF</button></td>
+      ${isTechFail(r) ? `<td class="no-print" style="color:var(--muted);">—</td><td class="no-print" style="color:var(--muted);">—</td>` : `<td class="no-print"><button class="btn-grille-ll" onclick="exportGrilleLL(${s.id})" title="Télécharger la grille Lesson Loom pré-remplie">📋 LL</button></td>
+      <td class="no-print"><button class="btn-pdf-single" onclick="exportPDF(${s.id})">PDF</button></td>`}
     `;
     tbody.appendChild(tr);
 
@@ -1953,12 +2222,20 @@ function renderResults() {
     tbody.appendChild(trDetail);
   });
 
-  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (!window.__cf13NoScroll) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (typeof cf18Refresh === 'function') cf18Refresh(); // CF18 : le bilan suit les modifications
 }
 
 function renderDetailInner(s) {
   const r = s.result;
   let html = '';
+
+  if (isTechFail(r)) {
+    const fichierEnCause = /Aucune page lisible|Lecture image impossible/.test(r.error || '');
+    const horsFormat = /^HORS_FORMAT/.test(r.error || ''); // CF8
+    html += `<div class="unreadable-notice">⚠️ ${horsFormat ? 'À reprendre — la réponse de l\'IA est inutilisable, la copie n\'est pas en cause.' : `Échec technique — la copie n'a pas pu être analysée. ${fichierEnCause ? 'Le fichier de la copie est en cause, pas son contenu.' : 'La copie n\'est pas en cause : reprenez-la en mode ✂️ Sans clé API.'}`}<div style="margin-top:6px;"><strong>Cause :</strong> ${escHtml(causeFr(r.error))}</div><div style="font-size:11px;opacity:.75;margin-top:4px;">Détail : ${escHtml(r.error || '')}</div></div>`;
+    return html;
+  }
 
   if (r.lisibility < 50) {
     html += `<div class="unreadable-notice">⚠️ Copie illisible — à corriger manuellement. ${escHtml(r.lisComment)}</div>`;
@@ -1970,47 +2247,57 @@ function renderDetailInner(s) {
     html += `<div class="partial-warning">⚠️ Lisibilité partielle (${r.lisibility}%) — ${escHtml(r.lisComment)}</div>`;
   }
 
-  // Grille CECRL
+  const cf13Hint = (t) => `<span style="font-size:10px; color:var(--muted); font-weight:400; text-transform:none; letter-spacing:0;">✏️ ${t}</span>`;
+  const cf13Title = (label, hint, extra) => `<div class="section-title" style="display:flex; justify-content:space-between; align-items:center;${extra || ''}"><span>${label}</span>${cf13Hint(hint)}</div>`;
+
+  // Grille CECRL : un clic sur une case change le palier (CF13)
   if (GRILLE && GRILLE.cols && GRILLE.rows) {
-    html += `<div class="section-title">Suggestions grille CECRL</div>`;
-    html += buildGrillePreview(r.grilleSuggestions);
+    html += cf13Title('Suggestions grille CECRL', 'Clique une case pour changer le palier');
+    html += buildGrillePreview(r.grilleSuggestions, s.id);
+    if (r.cf13Modif && !cf15On()) html += `<div style="font-size:11px; color:var(--primary); margin-top:4px;">✏️ Note recalculée après modification : <strong>${escHtml(r.note)}</strong>${isNaN(parseFloat(r.note)) ? '' : '/20'}</div>`;
+    const cf2Hors = Object.keys(r.grilleHorsGrille || {});
+    if (cf2Hors.length) {
+      html += `<div class="partial-warning">⚠️ Palier non reconnu dans la grille : ${cf2Hors.map(c => `${escHtml(c)} (« ${escHtml(r.grilleHorsGrille[c])} »)`).join(', ')}. Case laissée vide, à choisir toi-même.</div>`;
+    }
   }
 
-  // Tableau erreurs récurrentes
-  if (r.erreurs && r.erreurs.length) {
-    html += `<div class="section-title" style="margin-top:14px;">Erreurs récurrentes</div>`;
-    html += `<table class="feedback-table">
-      <thead><tr>
-        <th class="th-err" style="width:100px;">Catégorie</th>
-        <th class="th-err">Exemple dans la copie</th>
-        <th class="th-err">Correction</th>
-      </tr></thead><tbody>`;
-    r.erreurs.forEach(e => {
-      html += `<tr>
-        <td class="cat-label">${escHtml(e.type)}</td>
-        <td class="err-example">${escHtml(e.exemple)}</td>
-        <td>${escHtml(e.correction)}</td>
-      </tr>`;
-    });
-    html += `</tbody></table>`;
-  }
+  // Erreurs récurrentes modifiables (CF13)
+  const errs = r.erreurs || (r.erreurs = []);
+  html += cf13Title('Erreurs récurrentes', 'Modifiable', ' margin-top:14px;');
+  html += `<table class="feedback-table">
+    <thead><tr>
+      <th class="th-err" style="width:110px;">Catégorie</th>
+      <th class="th-err">Exemple dans la copie</th>
+      <th class="th-err">Correction</th>
+      <th class="th-err" style="width:24px;"></th>
+    </tr></thead><tbody>`;
+  errs.forEach((e, i) => {
+    html += `<tr>
+      <td class="cat-label cf13-ed" contenteditable="true" oninput="cf13Edit(${s.id},'err',${i},'type',this.textContent)">${escHtml(e.type)}${e.count > 1 ? ' ×' + e.count : ''}</td>
+      <td class="err-example cf13-ed" contenteditable="true" oninput="cf13Edit(${s.id},'err',${i},'exemple',this.textContent)">${escHtml(e.exemple)}</td>
+      <td class="cf13-ed" contenteditable="true" oninput="cf13Edit(${s.id},'err',${i},'correction',this.textContent)">${escHtml(e.correction)}</td>
+      <td style="text-align:center;"><button class="cf13-x" title="Retirer la ligne" onclick="cf13Remove(${s.id},'err',${i})">✕</button></td>
+    </tr>`;
+  });
+  html += `</tbody></table><button class="cf13-add" onclick="cf13Add(${s.id},'err')">＋ Ajouter une ligne</button>`;
 
-  // Tableau points positifs
-  if (r.positifs && r.positifs.length) {
-    html += `<div class="section-title" style="margin-top:10px;">Points positifs</div>`;
-    html += `<table class="feedback-table">
-      <thead><tr>
-        <th class="th-ok" style="width:100px;">Catégorie</th>
-        <th class="th-ok">Observation</th>
-      </tr></thead><tbody>`;
-    r.positifs.forEach(p => {
-      html += `<tr>
-        <td class="cat-label">${escHtml(p.type)}</td>
-        <td class="ok-example">${escHtml(p.obs)}</td>
-      </tr>`;
-    });
-    html += `</tbody></table>`;
-  }
+  // Points positifs modifiables (CF13)
+  const pos = r.positifs || (r.positifs = []);
+  html += cf13Title('Points positifs', 'Modifiable', ' margin-top:10px;');
+  html += `<table class="feedback-table">
+    <thead><tr>
+      <th class="th-ok" style="width:110px;">Catégorie</th>
+      <th class="th-ok">Observation</th>
+      <th class="th-ok" style="width:24px;"></th>
+    </tr></thead><tbody>`;
+  pos.forEach((p, i) => {
+    html += `<tr>
+      <td class="cat-label cf13-ed" contenteditable="true" oninput="cf13Edit(${s.id},'pos',${i},'type',this.textContent)">${escHtml(p.type)}</td>
+      <td class="ok-example cf13-ed" contenteditable="true" oninput="cf13Edit(${s.id},'pos',${i},'obs',this.textContent)">${escHtml(p.obs)}</td>
+      <td style="text-align:center;"><button class="cf13-x" title="Retirer la ligne" onclick="cf13Remove(${s.id},'pos',${i})">✕</button></td>
+    </tr>`;
+  });
+  html += `</tbody></table><button class="cf13-add" onclick="cf13Add(${s.id},'pos')">＋ Ajouter une ligne</button>`;
 
   // Appréciation — éditable directement
   html += `<div class="bilan-label" style="margin-top:10px; display:flex; align-items:center; justify-content:space-between;">
@@ -2032,26 +2319,36 @@ function renderDetailInner(s) {
   return html;
 }
 
-function buildGrillePreview(suggestions) {
+function buildGrillePreview(suggestions, sid) { // CF13 : sid present = cases cliquables
   const rows = GRILLE.rows || [];
   const cols = GRILLE.cols || [];
   const colsPoints = GRILLE.colsPoints || [];
 
   let t = `<table class="grille-preview"><thead><tr><th>Niveau</th>`;
-  cols.forEach((c, ci) => { t += `<th>${escHtml(c)}<br><span style="font-weight:400;font-size:10px;">/${colsPoints[ci]||'?'}</span></th>`; });
+  cols.forEach((c, ci) => { t += `<th>${escHtml(c)}<br><span style="font-weight:400;font-size:10px;">/${cf4Pts(colsPoints[ci])}</span></th>`; });
   t += `</tr></thead><tbody>`;
 
   rows.forEach((row, ri) => {
     const rowsPoints = GRILLE.rowsPoints || [];
     t += `<tr>`;
-    t += `<td><span class="level-label">${escHtml(row)}</span><br><span style="font-size:10px;color:var(--muted);">/${rowsPoints[ri]||'?'}</span></td>`;
+    t += `<td><span class="level-label">${escHtml(row)}</span><br><span style="font-size:10px;color:var(--muted);">/${cf4Pts(rowsPoints[ri])}</span></td>`;
     cols.forEach(col => {
       const suggested = suggestions[col] === row;
+      const cf13Ci = cols.indexOf(col);
+      const cf13P = suggested ? cf3CellPoints(ri, cf13Ci) : null;
+      const cf13Clic = sid !== undefined ? ` cf13-pick" onclick="cf13Pick(${sid},${ri},${cf13Ci})" title="Choisir ce palier` : '';
       const cellKey = `${ri}_${cols.indexOf(col)}`;
       const cellText = GRILLE.cells?.[cellKey]?.text || '';
-      t += `<td class="${suggested ? 'suggested' : ''}">
-        ${cellText ? `<div class="desc" style="font-size:10px;color:var(--ink2);margin-bottom:3px;">${escHtml(cellText.substring(0,80))}…</div>` : ''}
-        ${suggested ? `<span class="pts-suggested">✓ Suggéré</span>` : ''}
+      t += `<td class="${suggested ? 'suggested' : ''}${cf13Clic}">
+        ${cellText ? `<div class="desc" style="font-size:10px;color:var(--ink2);margin-bottom:3px;">${escHtml(cellText)}</div>` : ''}
+        ${suggested ? (() => {
+          const cf14R = sid !== undefined ? STUDENTS.find(x => x.id === sid)?.result : null;
+          const lbl = cf14R && (cf14R.cf13Choisi || {})[col] ? 'Choisi' : 'Suggéré';
+          if (!cf14R || cf15On()) return cf15On() ? `<span class="pts-suggested">✓ ${lbl}</span>` : `<span class="pts-suggested">✓ ${lbl}${cf13P !== null ? ' · ' + cf13P + ' pts' : ''}</span>`;
+          const v = cf14Pts(cf14R.cf14Pts, col, ri, cf13Ci);
+          const mx = cf14Max(cf13Ci);
+          return `<span class="pts-suggested">✓ ${lbl} · <input type="number" class="cf14-pt" step="0.25" min="0"${mx !== null ? ` max="${mx}"` : ''} value="${v !== null ? v : ''}" onclick="event.stopPropagation()" onchange="cf14Set(${sid},${cf13Ci},this.value)" title="Points de cette case"> pts</span>`;
+        })() : ''}
       </td>`;
     });
     t += `</tr>`;
@@ -2089,14 +2386,15 @@ function exportCSV() {
     const r = s.result;
     const errs = (r.erreurs || []).map(e => `${e.type}: ${e.exemple}`).join(' | ');
     const pos  = (r.positifs || []).map(p => `${p.type}: ${p.obs}`).join(' | ');
+    const ko = isTechFail(r);
     rows.push([
       s.name,
       s.classe || '',
-      r.note,
-      r.cecrObs,
+      ko ? '' : (cf15On() ? 'entraînement' : (r.note ?? '')),
+      ko ? '' : (r.cecrObs ?? ''),
       errs.replace(/"/g, '""'),
       pos.replace(/"/g, '""'),
-      (r.appreciBlock || '').replace(/"/g, '""').replace(/\n/g, ' ')
+      ko ? 'Échec technique — copie à reprendre' : (r.appreciBlock || '').replace(/"/g, '""').replace(/\n/g, ' ')
     ]);
   });
   const csv = rows.map(r => r.map(c => `"${c}"`).join(';')).join('\n');
@@ -2112,6 +2410,7 @@ function exportCSV() {
 // ── EXPORT GRILLE LESSON LOOM PRÉ-REMPLIE ──
 function exportGrilleLL(id) {
   const student = STUDENTS.find(s => s.id === id);
+  if (isTechFail(student?.result)) { showError('Cette copie est en échec technique : rien à exporter. Reprenez-la en mode ✂️ Sans clé API.'); return; }
   if (!student?.result || !GRILLE_RAW_HTML) {
     showError('Grille Lesson Loom non disponible. Importe d\'abord le fichier de distribution.');
     return;
@@ -2126,11 +2425,8 @@ function exportGrilleLL(id) {
   cols.forEach((col, cIdx) => {
     const sug = r.grilleSuggestions[col];
     if (!sug) return;
-    const rIdx = rows.findIndex(row =>
-      row.toUpperCase() === sug.toUpperCase() ||
-      sug.toUpperCase().startsWith(row.toUpperCase())
-    );
-    if (rIdx >= 0) stateCells[`${rIdx}_${cIdx}`] = rowsPoints[rIdx] || '';
+    const rIdx = rows.indexOf(sug); // CF2 : sug est deja l intitule exact d une ligne
+    if (rIdx >= 0) { const cf3P = cf14Pts(r.cf14Pts, col, rIdx, cIdx); if (cf3P !== null) stateCells[`${rIdx}_${cIdx}`] = cf3P; } // CF3 + CF14
   });
 
   const appreciationText = r.appreciBlock || '';
@@ -2145,15 +2441,19 @@ function exportGrilleLL(id) {
   // 2. Injecter STATE directement dans le JS en remplaçant "var STATE = loadState();"
   // On surcharge loadState pour retourner nos valeurs pré-remplies fusionnées avec le localStorage
   const cellsJson = JSON.stringify(stateCells);
+  // CF1 : chaque export a son propre tiroir (grille + nom + classe), independant de la version du fichier de distribution.
+  // Rouvrir le meme export garde les retouches ; un export regenere remet les paliers de CorrectForme et garde le bonus.
+  const cf1Safe = v => JSON.stringify(v).replace(/</g, '\\u003c');
+  const cf1Key = 'distrib-cf-' + (GRILLE.id || GRILLE.name || 'grille') + '-' + encodeURIComponent((student.name || '') + '|' + (student.classe || ''));
+  const cf1Stamp = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   const stateOverride = `var STATE = (function(){
+    STORAGE_KEY = ${cf1Safe(cf1Key)};
     var s = loadState();
-    var inject = { cells: ${cellsJson}, bonusPts: 0, bonusComment: '' };
-    if (!s[0]) s[0] = inject;
-    else {
-      s[0].cells = Object.assign({}, inject.cells, s[0].cells);
-      s[0].bonusPts = 0;
-      s[0].bonusComment = '';
-    }
+    var cells = ${cellsJson};
+    if (!s[0]) s[0] = { cells: cells, bonusPts: 0, bonusComment: '' };
+    else if (s.__cf !== ${cf1Safe(cf1Stamp)}) s[0].cells = Object.assign({}, cells);
+    s.__cf = ${cf1Safe(cf1Stamp)};
+    saveState(s);
     return s;
   })();`;
   html = html.replace('var STATE = loadState();', stateOverride);
@@ -2189,20 +2489,333 @@ function exportGrilleLL(id) {
   showToast(`Grille LL de ${student.name} téléchargée ✓`);
 }
 
+// CF12 : un seul fichier Lesson Loom pour toute la liste
+function cf12Cells(r) {
+  const out = {};
+  if (!r || isTechFail(r) || !r.grilleSuggestions || !GRILLE) return null;
+  const rows = GRILLE.rows || [], cols = GRILLE.cols || [];
+  cols.forEach((col, cIdx) => {
+    const rIdx = rows.indexOf(r.grilleSuggestions[col]);
+    if (rIdx < 0) return;
+    const p = cf14Pts(r.cf14Pts, col, rIdx, cIdx);
+    if (p !== null) out[`${rIdx}_${cIdx}`] = p;
+  });
+  return Object.keys(out).length ? out : null;
+}
+function exportGrilleLLClasse() {
+  if (!GRILLE_RAW_HTML || !GRILLE) { showError('Grille Lesson Loom non disponible. Importe d\'abord le fichier de distribution.'); return; }
+  if (!STUDENTS.length) { showError('Aucun élève dans la liste.'); return; }
+  const list = STUDENTS.map(s => ({ name: s.name, classe: s.classe || '' }));
+  const cells = STUDENTS.map(s => cf12Cells(s.result));
+  const nPre = cells.filter(Boolean).length;
+  const safe = v => JSON.stringify(v).replace(/</g, '\\u003c');
+  // Tiroir propre a ce fichier : jamais partage avec le fichier de distribution ni avec les exports par eleve
+  const key = 'distrib-cf-classe-' + (GRILLE.id || GRILLE.name || 'grille') + '-' + encodeURIComponent(list.map(s => s.name + '|' + s.classe).join(';'));
+  const stamp = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  let html = GRILLE_RAW_HTML.replace(/var STUDENTS\s*=\s*\[[\s\S]*?\];/, 'var STUDENTS = ' + safe(list) + ';');
+  // Premiere ouverture : valeurs de CorrectForme. Fichier rouvert : retouches gardees.
+  // Fichier regenere : paliers de CorrectForme remis pour les eleves corriges ; bonus et notes saisies a la main gardes.
+  const override = `var STATE = (function(){
+    STORAGE_KEY = ${safe(key)};
+    var s = loadState();
+    var C = ${safe(cells)};
+    var neuf = s.__cf !== ${safe(stamp)};
+    for (var i = 0; i < C.length; i++) {
+      if (!s[i]) s[i] = { cells: C[i] ? Object.assign({}, C[i]) : {}, bonusPts: 0, bonusComment: '' };
+      else if (neuf && C[i]) s[i].cells = Object.assign({}, C[i]);
+    }
+    s.__cf = ${safe(stamp)};
+    saveState(s);
+    return s;
+  })();`;
+  html = html.replace('var STATE = loadState();', override);
+  html = html.replace(/<title>[^<]*<\/title>/, `<title>${escHtml(GRILLE.name || 'Grille')} · classe</title>`);
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `grille-LL-classe-${String(GRILLE.name || 'grille').replace(/\s+/g, '-')}.html`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`Grille LL de la classe téléchargée : ${nPre} élève${nPre > 1 ? 's' : ''} pré-rempli${nPre > 1 ? 's' : ''} sur ${list.length} ✓`);
+}
+
+// ── CF18 : BILAN DE CLASSE ──
+// Lit les resultats deja obtenus sans jamais les modifier. Seule la vue « par themes » appelle l IA, a la demande.
+window.__cf18 = { open: false, view: 'cat', themes: null, sig: null, loading: false, err: '', who: '' };
+function cf18Esc(s) { return escHtml(String(s == null ? '' : s)); }
+function cf18Copies() {
+  return STUDENTS.filter(s => s.result && !isTechFail(s.result) && !(s.result.lisibility < 50));
+}
+function cf18Norm(t) { const v = String(t || '').trim(); return v ? v.charAt(0).toUpperCase() + v.slice(1).toLowerCase() : '—'; }
+// Rang des niveaux : du plus haut au plus bas, d apres les points de la grille (sinon l ordre de la grille)
+function cf18Rang(ci) {
+  const rows = (GRILLE && GRILLE.rows) || [];
+  const idx = rows.map((r, i) => i);
+  const pts = idx.map(i => cf3CellPoints(i, ci));
+  if (pts.some(p => p !== null)) idx.sort((a, b) => (pts[b] === null ? -1 : pts[b]) - (pts[a] === null ? -1 : pts[a]));
+  return idx;
+}
+const CF18_TEINTES = ['#5248b8', '#6c5ce7', '#9d92f0', '#c4bdf6', '#e2defb', '#f1effd'];
+function cf18Paliers(copies) {
+  const cols = (GRILLE && GRILLE.cols) || [], rows = (GRILLE && GRILLE.rows) || [];
+  return cols.map((col, ci) => {
+    const rang = cf18Rang(ci);
+    const seg = rang.map((ri, k) => ({ ri: ri, label: rows[ri], k: k, noms: copies.filter(s => (s.result.grilleSuggestions || {})[col] === rows[ri]).map(s => s.name) }));
+    const sans = copies.filter(s => rows.indexOf((s.result.grilleSuggestions || {})[col]) < 0).map(s => s.name);
+    return { col: col, ci: ci, seg: seg, sans: sans };
+  });
+}
+function cf18Categories(copies, champ) {
+  const m = {};
+  copies.forEach(s => (s.result[champ] || []).forEach(e => {
+    const c = cf18Norm(e.type);
+    if (!m[c]) m[c] = { cat: c, noms: [], occ: 0, ex: [] };
+    if (m[c].noms.indexOf(s.name) < 0) m[c].noms.push(s.name);
+    m[c].occ += (champ === 'erreurs' && e.count > 0) ? e.count : 1;
+    const ex = String(champ === 'erreurs' ? e.exemple : e.obs || '').replace(/\s+/g, ' ').trim();
+    const exc = ex; // CF18d : exemple en entier, plus de coupure
+    if (exc && m[c].ex.length < 3 && m[c].ex.indexOf(exc) < 0) m[c].ex.push(exc);
+  }));
+  return Object.values(m).sort((a, b) => b.noms.length - a.noms.length || b.occ - a.occ);
+}
+function cf18Notes(copies) {
+  if (cf15On()) return null;
+  const n = copies.map(s => parseFloat(s.result.note)).filter(x => !isNaN(x));
+  if (!n.length) return null;
+  const bins = [['≤8', x => x <= 8], ['9-10', x => x > 8 && x <= 10], ['11-12', x => x > 10 && x <= 12], ['13-14', x => x > 12 && x <= 14], ['15-16', x => x > 14 && x <= 16], ['17+', x => x > 16]];
+  return { moy: (n.reduce((a, b) => a + b, 0) / n.length).toFixed(1), max: Math.max(...n), min: Math.min(...n), bins: bins.map(b => [b[0], n.filter(b[1]).length]) };
+}
+// Eleves a accompagner : au moins deux competences sur les deux niveaux les plus bas
+function cf18Accompagner(copies) {
+  const cols = (GRILLE && GRILLE.cols) || [], rows = (GRILLE && GRILLE.rows) || [];
+  if (rows.length < 3) return [];
+  return copies.map(s => {
+    const bas = [];
+    cols.forEach((col, ci) => {
+      const ri = rows.indexOf((s.result.grilleSuggestions || {})[col]);
+      if (ri < 0) return;
+      const rang = cf18Rang(ci);
+      if (rang.slice(-2).indexOf(ri) >= 0) bas.push(col + ' ' + rows[ri]);
+    });
+    return { nom: s.name, bas: bas };
+  }).filter(x => x.bas.length >= 2);
+}
+function cf18Sig(copies) { return JSON.stringify(copies.map(s => [s.name, (s.result.erreurs || []).map(e => [e.type, e.exemple, e.count])])); }
+
+function cf18Toggle() {
+  const st = window.__cf18, box = document.getElementById('cf18-bilan');
+  st.open = !st.open;
+  box.style.display = st.open ? '' : 'none';
+  if (st.open) cf18Render();
+}
+function cf18Refresh() { if (window.__cf18 && window.__cf18.open) cf18Render(); }
+function cf18Who(txt) { window.__cf18.who = txt; const w = document.getElementById('cf18-who'); if (w) w.innerHTML = txt; }
+function cf18View(v) {
+  const st = window.__cf18;
+  st.err = '';
+  if (v === 'theme' && !getApiKey()) { st.view = 'cat'; st.err = 'Les thèmes demandent une clé API (en haut à droite).'; cf18Render(); return; }
+  st.view = v;
+  if (v === 'theme' && !st.themes && !st.loading) { cf18Themes(); return; }
+  cf18Render();
+}
+
+async function cf18Themes() {
+  const st = window.__cf18, copies = cf18Copies();
+  const lignes = [];
+  copies.forEach((s, i) => (s.result.erreurs || []).forEach(e => lignes.push(`Élève ${i + 1} | ${e.type} | ${String(e.exemple || '').replace(/\s+/g, ' ')} | ${String(e.correction || '').replace(/\s+/g, ' ')} | ${e.count || 1}`)));
+  if (!lignes.length) { st.view = 'cat'; st.err = 'Aucune erreur relevée : rien à regrouper.'; cf18Render(); return; }
+  st.loading = true; st.err = ''; cf18Render();
+  const prompt = `Tu es professeur d'anglais. Voici les erreurs relevées dans les copies d'une classe, une ligne par erreur (élève | catégorie | exemple | correction | occurrences).
+Regroupe-les en 3 à 6 thèmes de remédiation, du thème qui touche le plus d'élèves au moins fréquent. Un thème est un point de langue précis (ex. « verbe après to ou un modal », « prétérit des verbes irréguliers »), pas une catégorie générale.
+Dans les exemples, n'indique jamais les numéros des élèves.
+Réponds UNIQUEMENT avec du JSON valide, sans aucun texte autour :
+[{"theme": "intitulé court en français", "categorie": "Grammaire, Vocabulaire, Orthographe, Cohérence ou Pragmatique", "eleves": [numéros des élèves concernés], "exemples": ["2 ou 3 exemples tirés des copies"]}]
+
+${lignes.join('\n')}`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 90000);
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      signal: ctrl.signal, method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': getApiKey(), 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-sonnet-5-5', max_tokens: 4000, messages: [{ role: 'user', content: prompt }] })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const txt = (data.content || []).map(b => b.text || '').join('');
+    const a = txt.indexOf('['), b = txt.lastIndexOf(']');
+    const arr = JSON.parse(txt.slice(a, b + 1));
+    st.themes = (Array.isArray(arr) ? arr : []).filter(t => t && t.theme).map(t => ({
+      theme: String(t.theme), cat: cf18Norm(t.categorie),
+      noms: (t.eleves || []).map(n => copies[parseInt(n, 10) - 1]).filter(Boolean).map(s => s.name).filter((v, i, x) => x.indexOf(v) === i),
+      ex: (t.exemples || []).slice(0, 3).map(x => String(x).replace(/\s*\(\s*[ÉE]l[èe]ve\s*\d+\s*\)/gi, '').replace(/\s*[ÉE]l[èe]ve\s*\d+\s*:\s*/gi, '').trim()) // CF18d : sans numéro d eleve
+    }));
+    if (!st.themes.length) throw new Error('vide');
+    st.sig = cf18Sig(copies);
+  } catch (e) {
+    st.themes = null; st.view = 'cat';
+    st.err = (e && e.name === 'AbortError') ? 'Thèmes indisponibles : pas de réponse à temps.' : 'Thèmes indisponibles pour le moment (réseau, clé ou crédit).';
+  } finally {
+    clearTimeout(timer); st.loading = false; cf18Render();
+  }
+}
+
+function cf18Render() {
+  const box = document.getElementById('cf18-bilan');
+  if (!box) return;
+  const st = window.__cf18, copies = cf18Copies();
+  if (!copies.length || !GRILLE) { box.innerHTML = `<div class="cf18-hint">Aucune copie corrigée à analyser pour l’instant.</div>`; return; }
+  let h = `<div class="cf18-head"><span class="cf18-title">Bilan de classe</span><span class="cf18-hint">${copies.length} copie${copies.length > 1 ? 's' : ''} · ${cf18Esc(GRILLE.name || '')}</span></div>`;
+  // Paliers
+  const pal = cf18Paliers(copies);
+  h += `<div class="cf18-bloc"><div class="cf18-sous"><span style="color:var(--primary)">Paliers par compétence</span><span class="cf18-hint">Clique une barre pour voir les élèves</span></div>`;
+  pal.forEach(p => {
+    h += `<div class="cf18-ligne"><span class="cf18-comp">${cf18Esc(p.col)}</span><div class="cf18-barre">`;
+    p.seg.forEach(sg => {
+      if (!sg.noms.length) return;
+      const fond = CF18_TEINTES[Math.min(sg.k, CF18_TEINTES.length - 1)], txt = sg.k < 2 ? '#fff' : 'var(--ink)';
+      h += `<div style="width:${sg.noms.length / copies.length * 100}%;background:${fond};color:${txt};" title="${cf18Esc(sg.label)}" onclick="cf18Who(this.dataset.w)" data-w="${cf18Esc('<strong>' + cf18Esc(p.col) + ' · ' + cf18Esc(sg.label) + ' (' + sg.noms.length + ')</strong> : ' + sg.noms.map(cf18Esc).join(', '))}">${sg.noms.length}</div>`;
+    });
+    if (p.sans.length) h += `<div style="width:${p.sans.length / copies.length * 100}%;background:#fff;color:var(--muted);border:1px dashed var(--border2);" title="sans palier" onclick="cf18Who(this.dataset.w)" data-w="${cf18Esc('<strong>' + cf18Esc(p.col) + ' · sans palier (' + p.sans.length + ')</strong> : ' + p.sans.map(cf18Esc).join(', '))}">${p.sans.length}</div>`;
+    h += `</div></div>`;
+  });
+  const leg = pal.length ? pal[0].seg : [];
+  h += `<div class="cf18-leg">${leg.map(sg => `<span><i style="background:${CF18_TEINTES[Math.min(sg.k, CF18_TEINTES.length - 1)]}"></i>${cf18Esc(sg.label)}</span>`).join('')}</div>`;
+  h += `<div id="cf18-who" class="cf18-hint" style="min-height:16px; margin-top:6px;">${st.who}</div></div>`;
+  // Erreurs
+  const perime = st.themes && st.sig !== cf18Sig(copies);
+  h += `<div class="cf18-bloc"><div class="cf18-sous"><span style="color:#e17055">Erreurs les plus fréquentes dans la classe</span>
+    <span class="cf18-choix"><button class="${st.view === 'cat' ? 'on' : ''}" onclick="cf18View('cat')">Par catégorie</button><button class="${st.view === 'theme' ? 'on' : ''}" onclick="cf18View('theme')">Par thèmes (IA)</button></span></div>`;
+  if (st.err) h += `<div class="partial-warning" style="margin-bottom:8px;">⚠️ ${cf18Esc(st.err)}</div>`;
+  if (st.loading) h += `<div class="cf18-hint" style="padding:10px 0;">Regroupement des erreurs par thèmes…</div>`;
+  else {
+    const vueThemes = st.view === 'theme' && st.themes;
+    const lignes = vueThemes ? st.themes.map(t => ({ titre: t.theme, cat: t.cat, noms: t.noms, ex: t.ex })) : cf18Categories(copies, 'erreurs').map(c => ({ titre: c.cat, cat: '', noms: c.noms, ex: c.ex, occ: c.occ }));
+    if (vueThemes) h += `<div class="cf18-hint" style="margin-bottom:4px;">Thèmes regroupés par l’IA${perime ? ` · des corrections ont changé depuis <button class="cf18-maj" onclick="window.__cf18.themes=null;cf18View('theme')">Mettre à jour les thèmes</button>` : ''}</div>`;
+    h += `<table class="cf18-table"><thead><tr><th style="width:30%">${vueThemes ? 'Thème' : 'Catégorie'}</th><th style="width:16%">Élèves</th><th>Exemples relevés</th></tr></thead><tbody>`;
+    if (!lignes.length) h += `<tr><td colspan="3" class="cf18-hint">Aucune erreur relevée.</td></tr>`;
+    lignes.forEach(l => {
+      h += `<tr onclick="cf18Who(this.dataset.w)" data-w="${cf18Esc('<strong>' + cf18Esc(l.titre) + ' (' + l.noms.length + ')</strong> : ' + l.noms.map(cf18Esc).join(', '))}" style="cursor:pointer;">
+        <td><strong style="color:#c0573f">${cf18Esc(l.titre)}</strong>${l.cat ? `<br><span class="cf18-hint">${cf18Esc(l.cat)}</span>` : ''}</td>
+        <td><span class="cf18-jauge" style="width:${Math.max(4, l.noms.length / copies.length * 60)}px"></span>${l.noms.length}${l.occ ? `<span class="cf18-hint"> · ×${l.occ}</span>` : ''}</td>
+        <td class="cf18-hint">${l.ex.map(cf18Esc).join(' · ')}</td></tr>`;
+    });
+    h += `</tbody></table>`;
+  }
+  h += `</div>`;
+  // Points forts + notes
+  const forts = cf18Categories(copies, 'positifs').slice(0, 5);
+  const notes = cf18Notes(copies);
+  h += `<div class="cf18-deux"><div class="cf18-bloc"><div class="cf18-sous"><span style="color:#00a383">Points forts récurrents</span></div>`;
+  h += forts.length ? forts.map(f => `<div class="cf18-item">${cf18Esc(f.cat)} <span class="cf18-hint">— ${f.noms.length} élève${f.noms.length > 1 ? 's' : ''}${f.ex[0] ? ' · ' + cf18Esc(f.ex[0]) : ''}</span></div>`).join('') : `<div class="cf18-hint">Aucun point positif relevé.</div>`;
+  h += `</div>`;
+  if (notes) {
+    const mx = Math.max(1, ...notes.bins.map(b => b[1]));
+    h += `<div class="cf18-bloc"><div class="cf18-sous"><span style="color:var(--primary)">Notes</span></div>
+      <div style="display:flex; gap:18px; margin-bottom:8px;"><div><div class="cf18-hint">Moyenne</div><div class="cf18-chiffre">${notes.moy}</div></div><div><div class="cf18-hint">Plus haute</div><div class="cf18-chiffre">${notes.max}</div></div><div><div class="cf18-hint">Plus basse</div><div class="cf18-chiffre">${notes.min}</div></div></div>
+      <div class="cf18-histo">${notes.bins.map(b => `<div title="${b[1]} élève(s)" style="height:${b[1] / mx * 100}%"></div>`).join('')}</div>
+      <div class="cf18-histol">${notes.bins.map(b => `<span>${b[0]}<br>${b[1]}</span>`).join('')}</div></div>`;
+  }
+  h += `</div>`;
+  // Eleves a accompagner
+  const acc = cf18Accompagner(copies);
+  h += `<div class="cf18-bloc"><div class="cf18-sous"><span style="color:var(--primary)">Élèves à accompagner</span><span class="cf18-hint">Au moins deux compétences sur les deux niveaux les plus bas</span></div>`;
+  h += acc.length ? acc.map(a => `<div class="cf18-item"><strong>${cf18Esc(a.nom)}</strong> <span class="cf18-hint">· ${a.bas.map(cf18Esc).join(', ')}</span></div>`).join('') : `<div class="cf18-hint">Aucun élève dans ce cas.</div>`;
+  h += `</div>`;
+  h += `<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;"><button class="btn-secondary" onclick="cf18Pdf()">⬇ PDF du bilan</button>
+    <label class="cf18-hint" style="display:flex; gap:5px; align-items:center; cursor:pointer;"><input type="checkbox" id="cf18-anonyme"> sans les noms</label></div>`;
+  box.innerHTML = h;
+}
+
+// PDF du bilan : une page pour l enseignant
+function cf18Pdf() {
+  const copies = cf18Copies();
+  if (!copies.length || !GRILLE) { showError('Aucune copie corrigée à analyser.'); return; }
+  if (!window.jspdf) { showError('Le module PDF n’est pas chargé : vérifiez la connexion, puis rechargez la page.'); return; }
+  const st = window.__cf18, anonyme = !!(document.getElementById('cf18-anonyme') || {}).checked;
+  const ok = '\u20ac\u201a\u0192\u201e\u2026\u2020\u2021\u02c6\u2030\u0160\u2039\u0152\u017d\u2018\u2019\u201c\u201d\u2022\u2013\u2014\u02dc\u2122\u0161\u203a\u0153\u017e\u0178';
+  const sf = t => String(t == null ? '' : t).replace(/[\u2192\u21d2]/g, '->').replace(/\u2264/g, '<=').replace(/\u2265/g, '>=').replace(/[\u2009\u202f]/g, ' ').split('').filter(c => c.charCodeAt(0) < 256 || ok.indexOf(c) >= 0).join('');
+  const doc = new window.jspdf.jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+  const lm = 15, pw = 180, BAS = 282;
+  let y = 0;
+  doc.setFillColor(108, 92, 231); doc.rect(0, 0, 210, 14, 'F');
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(255, 255, 255);
+  doc.text(sf('Bilan de classe · ' + (GRILLE.name || '')), lm, 9);
+  doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+  doc.text(sf(copies.length + ' copies · ' + new Date().toLocaleDateString('fr-FR')), 210 - lm, 9, { align: 'right' });
+  y = 22;
+  const titre = (t, rgb) => { if (y > BAS - 20) { doc.addPage(); y = 15; } doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(rgb[0], rgb[1], rgb[2]); doc.text(sf(t), lm, y); y += 5; doc.setTextColor(26, 24, 48); };
+  const ligne = (cells, xs, ws, styles) => {
+    doc.setFontSize(8);
+    const L = cells.map((c, i) => { doc.setFont('helvetica', styles[i] || 'normal'); return doc.splitTextToSize(sf(c), ws[i]); });
+    const hh = Math.max(...L.map(l => l.length)) * 3.6 + 1.6;
+    if (y + hh > BAS) { doc.addPage(); y = 15; }
+    L.forEach((l, i) => { doc.setFont('helvetica', styles[i] || 'normal'); l.forEach((t, k) => doc.text(t, xs[i], y + 3 + k * 3.6)); });
+    y += hh; doc.setDrawColor(226, 224, 245); doc.line(lm, y, lm + pw, y);
+  };
+  // Paliers
+  titre('PALIERS PAR COMPÉTENCE (nombre d’élèves)', [108, 92, 231]);
+  const pal = cf18Paliers(copies);
+  const niv = pal.length ? pal[0].seg.map(s => s.label) : [];
+  const cw = Math.min(22, 110 / Math.max(1, niv.length));
+  ligne(['Compétence'].concat(niv), [lm].concat(niv.map((n, i) => lm + 70 + i * cw)), [68].concat(niv.map(() => cw - 1)), ['bold'].concat(niv.map(() => 'bold')));
+  pal.forEach(p => ligne([p.col].concat(p.seg.map(s => String(s.noms.length))), [lm].concat(niv.map((n, i) => lm + 70 + i * cw)), [68].concat(niv.map(() => cw - 1)), []));
+  y += 5;
+  // Erreurs
+  const vueThemes = st.view === 'theme' && st.themes;
+  titre(vueThemes ? 'ERREURS FRÉQUENTES — THÈMES' : 'ERREURS FRÉQUENTES — CATÉGORIES', [225, 112, 85]);
+  const E = vueThemes ? st.themes : cf18Categories(copies, 'erreurs').map(c => ({ theme: c.cat, noms: c.noms, ex: c.ex }));
+  ligne([vueThemes ? 'Thème' : 'Catégorie', 'Élèves', 'Exemples relevés'], [lm, lm + 62, lm + 80], [60, 16, 100], ['bold', 'bold', 'bold']);
+  E.forEach(e => ligne([e.theme, String(e.noms.length), e.ex.join(' · ')], [lm, lm + 62, lm + 80], [60, 16, 100], ['bold', 'normal', 'italic']));
+  y += 5;
+  // Points forts
+  titre('POINTS FORTS RÉCURRENTS', [0, 184, 148]);
+  cf18Categories(copies, 'positifs').slice(0, 5).forEach(f => ligne([f.cat, String(f.noms.length), f.ex[0] || ''], [lm, lm + 62, lm + 80], [60, 16, 100], ['bold', 'normal', 'normal']));
+  y += 5;
+  // Notes
+  const notes = cf18Notes(copies);
+  if (notes) {
+    titre('NOTES', [108, 92, 231]);
+    ligne(['Moyenne ' + notes.moy + ' · plus haute ' + notes.max + ' · plus basse ' + notes.min, notes.bins.map(b => b[0] + ' : ' + b[1]).join('   ')], [lm, lm + 80], [78, 100], ['bold', 'normal']);
+    y += 5;
+  }
+  // Eleves a accompagner
+  if (!anonyme) {
+    titre('ÉLÈVES À ACCOMPAGNER', [108, 92, 231]);
+    const acc = cf18Accompagner(copies);
+    if (!acc.length) ligne(['Aucun élève dans ce cas.'], [lm], [pw], []);
+    acc.forEach(a => ligne([a.nom, a.bas.join(', ')], [lm, lm + 45], [43, 135], ['bold', 'normal']));
+  }
+  doc.save(`bilan-classe-${String(GRILLE.name || 'grille').replace(/\s+/g, '-')}-${new Date().toISOString().slice(0, 10)}.pdf`);
+  showToast('PDF du bilan téléchargé ✓');
+}
+
 // ── EXPORT PDF par élève ──
 async function exportPDF(id) {
   const student = STUDENTS.find(s => s.id === id);
   if (!student?.result) return;
+  if (isTechFail(student.result)) { showError('Cette copie est en échec technique : rien à exporter. Reprenez-la en mode ✂️ Sans clé API.'); return; }
   const r = student.result;
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
 
-  const lm = 15; const pw = 180; const lineH = 5.5;
+  const lm = 15; const pw = 180; const lineH = 5; // CF16 : interligne de l appreciation resserre
   let y = 15;
 
   // Retire les marques de mise en forme que le texte peut contenir
   // (**gras**, *italique*, `code`) : elles s'afficheraient telles quelles.
-  const nettoyer = (texte) => (texte || '')
+  // CF6 : la police du PDF ne connait que les signes courants ; les autres sont remplaces ou retires
+  const CF6_OK = '\u20ac\u201a\u0192\u201e\u2026\u2020\u2021\u02c6\u2030\u0160\u2039\u0152\u017d\u2018\u2019\u201c\u201d\u2022\u2013\u2014\u02dc\u2122\u0161\u203a\u0153\u017e\u0178';
+  const pdfSafe = (t) => String(t == null ? '' : t)
+    .replace(/[\u2192\u27f6\u21d2\u2794\u279c\u27a1]/g, '->')
+    .replace(/[\u2190\u27f5\u21d0]/g, '<-')
+    .replace(/[\u2194\u21d4]/g, '<->')
+    .replace(/\u2248/g, '~').replace(/\u2260/g, '=/=').replace(/\u2264/g, '<=').replace(/\u2265/g, '>=')
+    .replace(/[\u2009\u202f\u2007\u200a]/g, ' ').replace(/[\u200b\u200c\u200d\ufe0f]/g, '')
+    .replace(/[\u2032\u02bc]/g, '\u2019')
+    .split('').filter(ch => ch.charCodeAt(0) < 256 || CF6_OK.indexOf(ch) >= 0).join('');
+  const nettoyer = (texte) => pdfSafe(texte || '')
     .replace(/\*\*\*(.+?)\*\*\*/g, '$1')
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/(^|[\s(])\*(\S(?:.*?\S)?)\*(?=[\s.,;:!?)]|$)/g, '$1$2')
@@ -2234,7 +2847,7 @@ async function exportPDF(id) {
   doc.setFillColor(108, 92, 231);
   doc.rect(0, 0, 210, 14, 'F');
   doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.setTextColor(255,255,255);
-  doc.text(student.name + (student.classe ? ' · ' + student.classe : ''), lm, 9);
+  doc.text(pdfSafe(student.name + (student.classe ? ' · ' + student.classe : '')), lm, 9);
   doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
   const niveau = document.getElementById('sel-niveau').value;
   const tache  = document.getElementById('sel-tache').value;
@@ -2243,114 +2856,108 @@ async function exportPDF(id) {
   doc.setTextColor(26,24,48);
 
   // ── Note + CECRL ──
-  doc.setFillColor(237,233,255); doc.roundedRect(lm, y, 40, 16, 3, 3, 'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(22); doc.setTextColor(108,92,231);
-  doc.text(r.note, lm+6, y+11);
-  doc.setFontSize(10); doc.setTextColor(120,110,160);
-  doc.text('/20', lm+20, y+11);
+  doc.setFillColor(237,233,255); doc.roundedRect(lm, y, 30, 9, 2, 2, 'F'); // CF16 : en-tete compact
+  doc.setFont('helvetica','bold'); doc.setTextColor(108,92,231);
+  if (cf15On() || isNaN(parseFloat(r.note))) { doc.setFontSize(9); doc.text(pdfSafe(cf15On() ? 'Entraînement' : r.note), lm+15, y+6, {align:'center'}); } // CF6 + CF15
+  else {
+    doc.setFontSize(13); doc.text(String(r.note), lm+4, y+6.5);
+    const cf16W = doc.getTextWidth(String(r.note));
+    doc.setFontSize(8); doc.setTextColor(120,110,160);
+    doc.text('/20', lm+4+cf16W+1.2, y+6.5);
+  }
 
-  doc.setFillColor(108,92,231); doc.roundedRect(lm+44, y, 30, 16, 3, 3, 'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(255,255,255);
-  doc.text(r.cecrObs, lm+59, y+10, {align:'center'});
+  doc.setFillColor(108,92,231); doc.roundedRect(lm+33, y, 20, 9, 2, 2, 'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(255,255,255);
+  doc.text(pdfSafe(r.cecrObs), lm+43, y+6.2, {align:'center'});
 
-  y += 22;
+  y += 14;
   doc.setTextColor(26,24,48);
 
-  // ── Grille CECRL (si dispo) ──
-  if (GRILLE && r.grilleSuggestions && Object.keys(r.grilleSuggestions).length) {
-    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(108,92,231);
-    doc.text('GRILLE CECRL', lm, y); y += 4;
-    const cols = GRILLE.cols || [];
-    const colsPoints = GRILLE.colsPoints || [];
-    const colW = pw / (cols.length + 1);
+  // CF6 : tableaux en texte complet, lignes repliees ; une section qui tient sur une page n est jamais coupee
+  const BAS = 282;           // limite basse de la zone imprimable
+  const LH7 = 3.1;           // interligne du texte en 7 points (CF16)
+  const cell = (t) => nettoyer(t).replace(/\n/g, ' ').trim();
+  const drawTable = (o) => {
     doc.setFontSize(7);
-    // Header
-    doc.setFillColor(230,226,255);
-    doc.rect(lm, y, pw, 6, 'F');
-    doc.setFont('helvetica','bold'); doc.setTextColor(108,92,231);
-    doc.text('Compétence', lm+2, y+4);
-    cols.forEach((c,ci) => doc.text((c.length>18?c.substring(0,16)+"…":c), lm+(ci+1)*colW+2, y+4));
-    y += 6;
-    cols.forEach((col, ci) => {
-      const sug = r.grilleSuggestions[col];
-      if (ci % 2 === 0) { doc.setFillColor(248,247,255); doc.rect(lm,y,pw,6,'F'); }
-      doc.setFont('helvetica','normal'); doc.setTextColor(26,24,48);
-      doc.text(col.length>22?col.substring(0,20)+"…":col, lm+2, y+4);
-      if (sug) {
-        doc.setFillColor(108,92,231); doc.roundedRect(lm+(ci+1)*colW+2, y+1, 16, 4, 1, 1, 'F');
-        doc.setFont('helvetica','bold'); doc.setTextColor(255,255,255);
-        doc.text(sug, lm+(ci+1)*colW+10, y+4, {align:'center'});
-      } else {
-        doc.setFont('helvetica','normal'); doc.setTextColor(160,160,180);
-        doc.text('—', lm+(ci+1)*colW+10, y+4, {align:'center'});
-      }
-      doc.setTextColor(26,24,48); y += 6;
+    const rowsM = o.rows.map(cells => {
+      const lines = cells.map((c, i) => { doc.setFont('helvetica', o.cols[i].style); return doc.splitTextToSize(cell(c) || '\u2014', o.cols[i].w); });
+      return { lines: lines, h: Math.max.apply(null, lines.map(l => l.length)) * LH7 + 2.8 };
+    });
+    const headH = 6, titleH = 4;
+    const total = titleH + headH + rowsM.reduce((a, m) => a + m.h, 0);
+    if ((y + total > BAS && total <= BAS - 15) || y + titleH + headH + (rowsM[0] ? rowsM[0].h : 0) > BAS) { doc.addPage(); y = 15; }
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor.apply(doc, o.titleRGB);
+    doc.text(o.title, lm, y); y += titleH;
+    const head = () => {
+      doc.setFillColor.apply(doc, o.headRGB); doc.rect(lm, y, pw, headH, 'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor.apply(doc, o.headTextRGB);
+      o.cols.forEach(c => doc.text(c.label, c.x, y + 4));
+      y += headH;
+    };
+    head();
+    rowsM.forEach((m, ri) => {
+      if (y + m.h > BAS) { doc.addPage(); y = 15; head(); }
+      if (ri % 2 === 0) { doc.setFillColor.apply(doc, o.zebraRGB); doc.rect(lm, y, pw, m.h, 'F'); }
+      o.cols.forEach((c, ci) => {
+        doc.setFont('helvetica', c.style); doc.setFontSize(7);
+        const ls = m.lines[ci];
+        if (c.pill && ls.length === 1 && ls[0] !== '\u2014') {
+          const w = doc.getTextWidth(ls[0]) + 5;
+          doc.setFillColor(108,92,231); doc.roundedRect(c.x, y + 0.9, w, 4, 1, 1, 'F');
+          doc.setTextColor(255,255,255); doc.text(ls[0], c.x + 2.5, y + 3.9);
+        } else {
+          doc.setTextColor.apply(doc, c.rgb);
+          ls.forEach((l, li) => doc.text(l, c.x, y + 3.9 + li * LH7));
+        }
+      });
+      y += m.h;
     });
     y += 4;
+    doc.setTextColor(26,24,48);
+  };
+
+  // ── Grille : une ligne par compétence, intitulé complet ──
+  if (GRILLE && r.grilleSuggestions && Object.keys(r.grilleSuggestions).length) {
+    drawTable(cf15Strip({
+      title: 'GRILLE', titleRGB: [108,92,231], headRGB: [230,226,255], headTextRGB: [108,92,231], zebraRGB: [248,247,255],
+      cols: [ { label: 'Compétence', x: lm+2, w: 112, style: 'normal', rgb: [26,24,48] },
+              { label: 'Palier', x: lm+118, w: 36, style: 'bold', rgb: [108,92,231], pill: true },
+              { label: 'Points', x: lm+157, w: 21, style: 'normal', rgb: [150,146,175] } ], // CF14 : points en discret
+      rows: (GRILLE.cols || []).map((col, ci) => {
+        const ri = (GRILLE.rows || []).indexOf(r.grilleSuggestions[col]);
+        const p = ri >= 0 ? cf14Pts(r.cf14Pts, col, ri, ci) : null;
+        const mx = cf14Max(ci);
+        return [col, r.grilleSuggestions[col] || '\u2014', p === null ? ' ' : (mx !== null ? p + ' / ' + mx : String(p))];
+      })
+    }));
   }
 
   // ── Tableau erreurs récurrentes ──
   if (r.erreurs && r.erreurs.length) {
-    if (y > 240) { doc.addPage(); y = 15; }
-    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(225,112,85);
-    doc.text('ERREURS RÉCURRENTES', lm, y); y += 4;
-
-    // Header
-    doc.setFillColor(225,112,85); doc.rect(lm, y, pw, 6, 'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(255,255,255);
-    doc.text('Catégorie', lm+2, y+4);
-    doc.text('Exemple dans la copie', lm+35, y+4);
-    doc.text('Correction', lm+105, y+4);
-    y += 6;
-
-    r.erreurs.forEach((e, ei) => {
-      if (y > 265) { doc.addPage(); y = 15; }
-      if (ei%2===0) { doc.setFillColor(253,238,235); doc.rect(lm,y,pw,7,'F'); }
-      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(180,80,60);
-      doc.text(e.type, lm+2, y+4.5);
-      doc.setFont('helvetica','italic'); doc.setTextColor(26,24,48);
-      const exBrut = nettoyer(e.exemple).replace(/\n/g, ' ');
-      const ex = exBrut.length > 45 ? exBrut.substring(0, 43) + "…" : exBrut;
-      doc.text(ex, lm+35, y+4.5);
-      doc.setFont('helvetica','normal');
-      const corBrut = nettoyer(e.correction).replace(/\n/g, ' ');
-      const cor = corBrut.length > 35 ? corBrut.substring(0, 33) + "…" : corBrut;
-      doc.text(cor, lm+105, y+4.5);
-      y += 7;
+    drawTable({
+      title: 'ERREURS RÉCURRENTES', titleRGB: [225,112,85], headRGB: [225,112,85], headTextRGB: [255,255,255], zebraRGB: [253,238,235],
+      cols: [ { label: 'Catégorie', x: lm+2, w: 31, style: 'bold', rgb: [180,80,60] },
+              { label: 'Exemple dans la copie', x: lm+35, w: 67, style: 'italic', rgb: [26,24,48] },
+              { label: 'Correction', x: lm+105, w: 73, style: 'normal', rgb: [26,24,48] } ],
+      rows: r.erreurs.map(e => [e.type + (e.count > 1 ? ' ×' + e.count : ''), e.exemple, e.correction])
     });
-    y += 4;
   }
 
   // ── Tableau points positifs ──
   if (r.positifs && r.positifs.length) {
-    if (y > 240) { doc.addPage(); y = 15; }
-    doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(0,184,148);
-    doc.text('POINTS POSITIFS', lm, y); y += 4;
-
-    doc.setFillColor(0,184,148); doc.rect(lm, y, pw, 6, 'F');
-    doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(255,255,255);
-    doc.text('Catégorie', lm+2, y+4);
-    doc.text('Observation', lm+45, y+4);
-    y += 6;
-
-    r.positifs.forEach((p, pi) => {
-      if (y > 265) { doc.addPage(); y = 15; }
-      if (pi%2===0) { doc.setFillColor(224,250,244); doc.rect(lm,y,pw,7,'F'); }
-      doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(0,130,100);
-      doc.text(p.type, lm+2, y+4.5);
-      doc.setFont('helvetica','normal'); doc.setTextColor(26,24,48);
-      const obsBrut = nettoyer(p.obs).replace(/\n/g, ' ');
-      const obs = obsBrut.length > 100 ? obsBrut.substring(0, 98) + "…" : obsBrut;
-      doc.text(obs, lm+45, y+4.5);
-      y += 7;
+    drawTable({
+      title: 'POINTS POSITIFS', titleRGB: [0,184,148], headRGB: [0,184,148], headTextRGB: [255,255,255], zebraRGB: [224,250,244],
+      cols: [ { label: 'Catégorie', x: lm+2, w: 40, style: 'bold', rgb: [0,130,100] },
+              { label: 'Observation', x: lm+45, w: 133, style: 'normal', rgb: [26,24,48] } ],
+      rows: r.positifs.map(p => [p.type, p.obs])
     });
-    y += 4;
   }
 
   // ── Appréciation ──
   if (r.appreciBlock) {
-    const BAS = 282;           // limite basse de la zone imprimable
-    if (y > 250) { doc.addPage(); y = 15; }
+    doc.setFont('helvetica','normal'); doc.setFontSize(9);
+    const cf6H = 3 + wrap(r.appreciBlock, pw - 8).length * lineH + 8;
+    if ((y + cf6H > BAS && cf6H <= BAS - 15) || y > 250) { doc.addPage(); y = 15; }
     doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(108,92,231);
     doc.text('APPRÉCIATION', lm, y); y += 3;
 
@@ -2396,6 +3003,83 @@ function setDot(id, status) {
 }
 
 // ── MISE À JOUR APPRÉCIATION ÉDITABLE ──
+// CF13 : modifications faites par l enseignant apres la correction
+function cf13Refresh(id) {
+  const open = [...document.querySelectorAll('.detail-panel.open')].map(p => p.id);
+  const y = window.scrollY;
+  window.__cf13NoScroll = true;
+  try { renderResults(); } finally { window.__cf13NoScroll = false; }
+  open.forEach(pid => { const p = document.getElementById(pid); if (p) p.classList.add('open'); });
+  window.scrollTo(0, y);
+}
+function cf13Pick(id, ri, ci) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s || !s.result || !GRILLE) return;
+  const r = s.result, col = GRILLE.cols[ci];
+  r.grilleSuggestions = r.grilleSuggestions || {};
+  r.grilleSuggestions[col] = GRILLE.rows[ri];
+  if (r.grilleHorsGrille) delete r.grilleHorsGrille[col];
+  r.cf13Choisi = r.cf13Choisi || {}; r.cf13Choisi[col] = true;
+  if (r.cf14Pts) delete r.cf14Pts[col]; // CF14 : un nouveau palier reprend ses propres points
+  const n = cf3Note(r.grilleSuggestions, r.cf14Pts);
+  r.note = n !== null ? n : 'à calculer';
+  r.cf13Modif = true;
+  cf13Refresh(id);
+}
+// CF15 : mode entrainement, retour sans note ni points
+function cf15On() { const c = document.getElementById('chk-entrainement'); return !!(c && c.checked); }
+function cf15Strip(o) { if (cf15On()) { o.cols = o.cols.slice(0, 2); o.rows = o.rows.map(x => x.slice(0, 2)); } return o; }
+
+// CF14 : l enseignant ajuste les points de la case choisie
+function cf14Set(id, ci, val) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s || !s.result || !GRILLE) return;
+  const r = s.result, col = GRILLE.cols[ci];
+  r.cf14Pts = r.cf14Pts || {};
+  let v = parseFloat(String(val).replace(',', '.'));
+  if (isNaN(v)) delete r.cf14Pts[col];
+  else {
+    v = Math.max(0, v);
+    const mx = cf14Max(ci);
+    if (mx !== null) v = Math.min(mx, v);
+    r.cf14Pts[col] = Math.round(v * 100) / 100;
+  }
+  const n = cf3Note(r.grilleSuggestions, r.cf14Pts);
+  r.note = n !== null ? n : 'à calculer';
+  r.cf13Modif = true;
+  cf13Refresh(id);
+}
+function cf13Axes(r) { r.axes = (r.erreurs || []).length ? r.erreurs.map(e => e.type).join(', ') : '—'; }
+function cf13Edit(id, kind, i, field, val) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s || !s.result) return;
+  const list = kind === 'err' ? s.result.erreurs : s.result.positifs;
+  if (!list || !list[i]) return;
+  const v = String(val || '').replace(/\s+/g, ' ').trim();
+  if (kind === 'err' && field === 'type') {
+    const m = v.match(/^(.*?)\s*[×x]\s*(\d+)\s*$/);
+    list[i].type = (m ? m[1] : v) || '—';
+    list[i].count = m ? parseInt(m[2], 10) : null;
+    cf13Axes(s.result);
+  } else list[i][field] = v;
+}
+function cf13Remove(id, kind, i) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s || !s.result) return;
+  const list = kind === 'err' ? s.result.erreurs : s.result.positifs;
+  if (list) list.splice(i, 1);
+  cf13Axes(s.result);
+  cf13Refresh(id);
+}
+function cf13Add(id, kind) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s || !s.result) return;
+  if (kind === 'err') (s.result.erreurs = s.result.erreurs || []).push({ type: 'Grammaire', exemple: '', correction: '', count: null });
+  else (s.result.positifs = s.result.positifs || []).push({ type: 'Catégorie', obs: '' });
+  cf13Axes(s.result);
+  cf13Refresh(id);
+}
+
 function updateApprec(id, val) {
   const student = STUDENTS.find(s => s.id === id);
   if (student && student.result) student.result.appreciBlock = val;
@@ -2590,6 +3274,7 @@ function applyPdfAssignments() {
   });
   updateCopiesBadge();
   updateLaunchState();
+  populateStudentManualSelect(); // CF9 : la liste du mode sans cle suit aussi le PDF Scanner
   showToast(`${applied} page${applied > 1 ? 's' : ''} associée${applied > 1 ? 's' : ''} aux élèves ✓`);
   // Fermer le splitter
   togglePdfSplitter();
