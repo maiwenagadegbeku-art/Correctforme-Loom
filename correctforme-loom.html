@@ -2250,6 +2250,9 @@ function renderDetailInner(s) {
   const cf13Hint = (t) => `<span style="font-size:10px; color:var(--muted); font-weight:400; text-transform:none; letter-spacing:0;">✏️ ${t}</span>`;
   const cf13Title = (label, hint, extra) => `<div class="section-title" style="display:flex; justify-content:space-between; align-items:center;${extra || ''}"><span>${label}</span>${cf13Hint(hint)}</div>`;
 
+  // CF24 : niveau observe qui suit les paliers, modifiable a la main
+  html += cf24Ligne(s);
+
   // Grille CECRL : un clic sur une case change le palier (CF13)
   if (GRILLE && GRILLE.cols && GRILLE.rows) {
     html += cf13Title('Suggestions grille CECRL', 'Clique une case pour changer le palier');
@@ -3024,6 +3027,50 @@ function cf13Pick(id, ri, ci) {
   const n = cf3Note(r.grilleSuggestions, r.cf14Pts);
   r.note = n !== null ? n : 'à calculer';
   r.cf13Modif = true;
+  if (r.cf24Mode !== 'manuel') { const p = cf24Palier(r); if (p) { r.cecrObs = p; r.cf24Mode = 'auto'; } } // CF24
+  cf13Refresh(id);
+}
+// CF24 : niveau observe
+const CF24_CECRL = ['A1', 'A1+', 'A2', 'A2+', 'B1', 'B1+', 'B2', 'B2+', 'C1'];
+function cf24EstCecrl(x) { return /^[A-C][12]\+?(\s*\/\s*[A-C][12]\+?)?$/.test(String(x || '').trim()); }
+// Palier le plus frequent de la copie ; a egalite, le plus bas. Rien si les niveaux de la grille ne sont pas des niveaux CECRL.
+function cf24Palier(r) {
+  if (!GRILLE || !r || !r.grilleSuggestions) return null;
+  const rows = GRILLE.rows || [], compte = {};
+  (GRILLE.cols || []).forEach(col => { const ri = rows.indexOf(r.grilleSuggestions[col]); if (ri >= 0) compte[ri] = (compte[ri] || 0) + 1; });
+  const rang = cf18Rang(0); // du plus haut au plus bas
+  let best = null;
+  Object.keys(compte).map(Number).forEach(ri => {
+    if (best === null || compte[ri] > compte[best] || (compte[ri] === compte[best] && rang.indexOf(ri) > rang.indexOf(best))) best = ri;
+  });
+  if (best === null || !cf24EstCecrl(rows[best])) return null;
+  return rows[best];
+}
+function cf24Ligne(s) {
+  const r = s.result, cur = r.cecrObs || '—';
+  const opts = [];
+  CF24_CECRL.concat((GRILLE && GRILLE.rows) || []).concat([cur]).forEach(x => { if (x && opts.indexOf(x) < 0) opts.push(x); });
+  const etat = r.cf24Mode === 'manuel' ? 'choisi par vous' : (r.cf24Mode === 'auto' ? 'suit les paliers' : 'proposé par l’IA');
+  const peutSuivre = r.cf24Mode === 'manuel' && cf24Palier(r) !== null;
+  return `<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; font-size:13px;">
+    <span style="font-weight:600; color:var(--ink2);">Niveau observé</span>
+    <select class="cf24-niv" onchange="cf24Set(${s.id}, this.value)" style="font-family:inherit; font-size:13px; padding:3px 6px; border:1px solid var(--primary); border-radius:6px; color:var(--primary); background:#fff;">${opts.map(x => `<option${x === cur ? ' selected' : ''}>${escHtml(x)}</option>`).join('')}</select>
+    <span style="font-size:11px; color:var(--muted);">${etat}</span>
+    ${peutSuivre ? `<button class="cf13-add" style="margin-top:0;" onclick="cf24Suivre(${s.id})">↺ Suivre les paliers</button>` : ''}
+  </div>`;
+}
+function cf24Set(id, v) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s || !s.result) return;
+  s.result.cecrObs = v; s.result.cf24Mode = 'manuel';
+  cf13Refresh(id);
+}
+function cf24Suivre(id) {
+  const s = STUDENTS.find(x => x.id === id);
+  if (!s || !s.result) return;
+  const p = cf24Palier(s.result);
+  if (p) s.result.cecrObs = p;
+  s.result.cf24Mode = 'auto';
   cf13Refresh(id);
 }
 // CF15 : mode entrainement, retour sans note ni points
